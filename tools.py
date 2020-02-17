@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ######### Integration Tool ###########
 
 #for single integration tool, 3/8 simpson rule
 #for double integration tool, normal simpson rule
 
-=======
->>>>>>> 8ac00dc24fa2c0e6fd7b5b821ee876c78036bd9f
-=======
->>>>>>> 8ac00dc24fa2c0e6fd7b5b821ee876c78036bd9f
 import numpy as np
 def f(x):
     return 1 / x
@@ -45,22 +40,5 @@ def dintegral(f, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound, ste
         x = x + step_size
     return(integral)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 ########################################
-=======
-=======
->>>>>>> 8ac00dc24fa2c0e6fd7b5b821ee876c78036bd9f
 
-
-
-
-            
-            
-
-    
-
-<<<<<<< HEAD
->>>>>>> 8ac00dc24fa2c0e6fd7b5b821ee876c78036bd9f
-=======
->>>>>>> 8ac00dc24fa2c0e6fd7b5b821ee876c78036bd9f
