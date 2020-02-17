@@ -1,0 +1,54 @@
+Cell 1: Leading edge cell on the left
+Cell 2: Trailing edge cell  on the right
+
+
+Centroids
+Cz in z direction
+Cy in y direction
+
+Moments of Inertia 
+
+Izz over the z-axis
+Iyy over the y-axis
+
+Shear center
+SCy line of symmetry which goes from the leading edge to the trailing edge 
+SCz z-coordinate of the Shear Center
+
+Enclosed Area
+Am1= Enclosed Area of Cell 1
+Am2= Enclosed Area of Cell 2
+
+Amtotal= Am1 + Am2
+
+
+
+Aerodynamic Load
+Aeroxz= given data about the aerodynamic load (should be a matrix)
+Aeroz= Matrix of resultant forces ( 1st row = force, 2nd row= Cp location from leading edge)
+
+Deflections + Twist
+w =deflection in z direction
+v =deflection in y direction 
+
+theta =twist angle
+
+
+
+Boundary Conditions:
+w(x1) =0
+w(x2) =0
+w(x3) =0
+T(0) =0
+My(0)=0
+Mz(0)=0
+Sy(0)=0
+Sz(0)=0
+v(x1)+theta(x1)*zhat=d1
+v(x2)+theta(x2)*zhat=d2=0
+v(x3)+theta(x3)*zhat=d3
+
+
+
+
+
