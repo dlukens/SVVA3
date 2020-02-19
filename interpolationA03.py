@@ -34,7 +34,7 @@ aeroforce_x = data
 
 
 def interpolate(force, grid):
-    coeff = np.zeros((len(force)-1, 4, len(force.T)-1))
+    C0 = np.zeros((len(force)-1, 4, len(force.T)-1))
 
     for r in range(len(force)-1):
 
@@ -81,20 +81,20 @@ def interpolate(force, grid):
         b = b[:-1]
         d = d[:-1]
         
-        #Now 3D array with all coefficients for each section and each chord
+        #Now 3D array with all C0icients for each section and each chord
             #Index 0: Spanwise chord section - along X-axis
-            #Index 1: Coefficient value (a, b, c, d)
+            #Index 1: C0icient value (a, b, c, d)
             #Index 2: Chordwise interval - along -Z-Axis
         
-        coeff[r, 0, :] = a
-        coeff[r, 1, :] = b
-        coeff[r, 2, :] = c
-        coeff[r, 3, :] = d
+        C0[r, 0, :] = a
+        C0[r, 1, :] = b
+        C0[r, 2, :] = c
+        C0[r, 3, :] = d
         
       
-    return coeff
+    return C0
 
-def interplot(delta, grid, coeff):
+def interplot(delta, grid, C0):
     #Use negative step size
     n = len(grid)-1
 
@@ -105,7 +105,7 @@ def interplot(delta, grid, coeff):
     
     for t in range(0,n-1):
         for u in np.arange(grid[t], grid[t+1], delta):
-            S.append(coeff[0, t]*(u - grid[t])**3 + coeff[1, t]*(u - grid[t])**2 + coeff[2, t]*(u - grid[t]) + coeff[3, t])
+            S.append(C0[0, t]*(u - grid[t])**3 + C0[1, t]*(u - grid[t])**2 + C0[2, t]*(u - grid[t]) + C0[3, t])
             z.append(u)
             
     plt.plot(z, S)
@@ -114,12 +114,12 @@ def interplot(delta, grid, coeff):
 
 #Calling Functions
 
-coeff_z = interpolate(aeroforce_z, data_z)
-coeff_x = interpolate(aeroforce_x, data_x)
+C0_z = interpolate(aeroforce_z, data_z)
+C0_x = interpolate(aeroforce_x, data_x)
 
 
-interplot(0.0001, data_x, coeff_x[5,:,:])
-interplot(-0.0001, data_z, coeff_z[5,:,:])
+#interplot(0.0001, data_x, C0_x[5,:,:])
+#interplot(-0.0001, data_z, C0_z[5,:,:])
 
 
 

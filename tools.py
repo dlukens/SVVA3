@@ -24,6 +24,7 @@ def integral(f, lower_bound, upper_bound, n):
     R = ((3*step_size)/8)* som
     return (R)
 
+
 def f2(x,y):
     return x*y + 2*x + 3*y
 
