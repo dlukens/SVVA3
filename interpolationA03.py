@@ -14,7 +14,7 @@ from scipy.interpolate import interp1d
 import pandas as pd
 
 #import data set
-data = np.loadtxt('/Users/frederik/GitHub/SVVA3/aeroload.dat',dtype='float', delimiter=',')
+data = np.loadtxt('aeroload.dat',dtype='float', delimiter=',')
 
 #### Cordinates of aero force ####
 
