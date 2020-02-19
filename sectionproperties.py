@@ -19,11 +19,11 @@ x2 = 1.051       #x-coordinate hinge 2 [m]
 x3 = 2.512       #x-coordinate hinge 3 [m]
 xA = 0.3       #spacing between actuator I & II [m]
 h = 0.248      #aileron profile thickness (height) [m]
-Tsp = 2.2      #spar thickness [mm]
-Tst = 1.2      #stiffener thickness [mm]
-Tsk = 1.1      #skin thickness [mm]
-Hst = 150      #stiffener height [mm]
-Wst = 300      #stiffener width [mm]
+Tsp = 0.0022   #spar thickness [m]
+Tst = 0.0012   #stiffener thickness [m]
+Tsk = 0.0011   #skin thickness [m]
+Hst = 0.150    #stiffener height [m]
+Wst = 0.300      #stiffener width [m]
 Nst = 11      #number of stiffeners
 delta_y1 = 1.034 #vertical displacement of hinge 1 [cm]
 delta_y3 = 2.066 #vertical displacement of hinge 3 [cm]
@@ -39,7 +39,7 @@ angle_Lssk = m.asin((0.5*h)/Lssk)   #angle of straight skin with symmetry line
 
 z_st0 = 0
 
-rad_st1 = delta_str/(h*0.25*m.pi)
+rad_st1 = 2*delta_str/h
 
 #upper half
 z_st1 = z_st0 - (0.5*h - m.cos(rad_st1)*0.5*h)  #z_coordinate first stringer (on bent part)
@@ -58,20 +58,50 @@ y_st5 = y_st0 + m.sin(angle_Lssk)*(Lssk - 3*delta_str - abs(0.25*m.pi*h - 2*delt
 
 Ast = Hst * Tst + Wst * Tst                     #stiffener area [mm^2]
 
+Cy = 0 # y_coordinate of centroid of cross section [m]
 
 #centroid z_coordinate (y_coordinate is on symmetry axis)
 
-z_bar_Lssk = (m.cos(angle_Lssk)*0.5*Lssk*1000 - Ca)*Tsk*Lssk*1000   #centroid Lssk
-z_bar_arc = (h*1000)/m.pi - 0.5*h*1000
-z_bar_spar = -Tsp*(h*1000)*0.5*(h*1000)
-A_tot = Lsk*Tsk*1000 + 11*Ast * Tsp*h*1000
+z_bar_Lssk = m.cos(angle_Lssk)*0.5*Lssk - Ca                   #centroid Lssk
+z_bar_arc = h/m.pi - 0.5*h                                   #centroid semi-arc
+z_bar_spar = -0.5*h                                               #centroid spar
+A_tot = Lsk*Tsk + 11*Ast + Tsp*h                                         #total area [m^2]
 
-z_bar = (2*Ast*1000*(z_st1+z_st2+z_st3+z_st4+z_st5) + z_bar_spar  + 2*z_bar_Lssk + z_bar_arc)/A_tot
+Cz = (2*Ast*(z_st1+z_st2+z_st3+z_st4+z_st5) + Tsp*h*z_bar_spar  + 2*z_bar_Lssk*Lssk*Tsk + z_bar_arc*0.5*m.pi*h*Tsk)/A_tot #aileron centroid [m]
 
-print(z_bar)
+print(Cz)
 
 z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
 
-# plt.plot(z, y)
-# plt.show()
+# Moments of inertia
+Izz_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(angle_Lssk))**2 #MOI one straight skin
+Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin
+
+Izz_sp = (1/12)*Tsp*h*h*h #MOI spar, no steiner term
+
+Izz_arc = (m.pi/8)*(h/2)**4 #MOI arc, no steiner term
+
+Izz = 0
+for i in y :
+    steiner = 2*Ast*i*i
+    Izz += steiner
+
+Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
+print(Izz)
+
+Iyy_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(0.5*m.pi - angle_Lssk))**2
+Ad_yss = Lssk*Tsk*(0.5*Lssk*m.cos(angle_Lssk) - Cz)**2
+
+Iyy_sp = Tsp*h*(Cz - 0.5*h)**2 # only steiner term
+
+Iyy_arc = Izz_arc
+Ad_yarc = 0.5*m.pi*h*Tsk*(h/m.pi - 0.5*h - Cz)**2
+
+Iyy = 0
+for i in z[1:] :
+    steiner = 2*Ast*(i - Cz)**2
+    Iyy += steiner
+    
+Iyy += Ast*Cz*Cz + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc + Ad_yarc # [m^4]
+print(Iyy)
