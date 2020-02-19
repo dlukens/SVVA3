@@ -4,7 +4,6 @@
 #for single integration tool, 3/8 simpson rule
 #for double integration tool, normal simpson rule
 
-import numpy as np
 
 def f(x):
     return 1 / x
@@ -24,6 +23,7 @@ def integral(f, lower_bound, upper_bound, n):
             som = som + 3 * f(lower_bound + i*step_size)
     R = ((3*step_size)/8)* som
     return (R)
+
 
 def f2(x,y):
     return x*y + 2*x + 3*y
