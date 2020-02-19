@@ -1,8 +1,9 @@
 import numpy as np
-import scipy as sc
 import math
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
+import interpolationA03
+import tools
+
 
     
 data = np.loadtxt('aeroload.dat',dtype='float', delimiter=',')
@@ -29,12 +30,16 @@ for i in range(Nz):
 
 for i in range(Nx):
     data_x[i] = la/4*(2 - math.cos(theta(i, Nx)) - math.cos(theta(i+1, Nx)))
-
-
-########Reaction Forces##########
     
-#We set up forces and moment equations
-#
+plt.plot(data, data_z[0])
+plt.show()
+
+
+########Aero Load Integration to find resultant force, location and moment##########
+    
+#print(interpolationA03.S)
+    
+
 
     
 
