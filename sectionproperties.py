@@ -31,7 +31,7 @@ theta = 25      #maximum upward deflection [deg]
 P = 20.6        #maximum load in actuator 2 [kN]
 
 #calculate z_coordinates stiffeners
-Lssk = m.sqrt((0.5*h)**2 + (Ca-0.5*h)**2) #length of straight skin (one half)
+Lssk = m.sqrt(0.5*0.5*h*h + (Ca - 0.5*h)*(Ca - 0.5*h)) #length of straight skin (one half)
 Lsk = 2*Lssk + 0.5*m.pi*h #length of skin [m]
 
 delta_str = Lsk/Nst                 #distance between stringers
@@ -91,7 +91,7 @@ Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
 print(Izz)
 
 Iyy_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(0.5*m.pi - angle_Lssk))**2
-Ad_yss = Lssk*Tsk*(0.5*Lssk*m.cos(angle_Lssk) - Cz)**2
+Ad_yss = Lssk*Tsk*(0.5*Lssk*m.cos(angle_Lssk) - Cz - Ca)**2
 
 Iyy_sp = Tsp*h*(Cz - 0.5*h)**2 # only steiner term
 
