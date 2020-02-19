@@ -1,6 +1,7 @@
 Cell 1: Leading edge cell on the left
 Cell 2: Trailing edge cell  on the right
 
+alpha = aileron pitch angle
 
 Centroids
 Cz in z direction
@@ -36,16 +37,34 @@ theta =twist angle
 
 
 Boundary Conditions:
-w(x1) =0
+w(x1) =d1*sin(alpha)
 w(x2) =0
-w(x3) =0
+w(x3) =d3*sin(alpha)
 T(0) =0
 My(0)=0
 Mz(0)=0
 Sy(0)=0
 Sz(0)=0
-v(x1)+theta(x1)*zhat=d1
+v(x1)+theta(x1)*zhat=d1*cos(alpha)
 v(x2)+theta(x2)*zhat=d2=0
+<<<<<<< HEAD
+v(x3)+theta(x3)*zhat=d3*cos(alpha)
+
+
+Unknown Reaction Forces:
+R1y
+R1z
+R2y
+R2z
+R3y
+R3z
+RIz=RI*cos(alpha)
+RIy=RI*sin(alpha)
+
+
+
+=======
 v(x3)+theta(x3)*zhat=d3
 
 aeroforce_z --> aeroforce data for every z coordinate on a given cord
+>>>>>>> 3af514d1be3612fff3c84fa59da52dabd3f7c7da
