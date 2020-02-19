@@ -11,6 +11,7 @@ Moments of Inertia
 
 Izz over the z-axis
 Iyy over the y-axis
+J is the polar moment of Inertia 
 
 Shear center
 SCy line of symmetry which goes from the leading edge to the trailing edge 
@@ -51,7 +52,7 @@ v(x2)+theta(x2)*zhat=d2=0
 v(x3)+theta(x3)*zhat=d3*cos(alpha)
 
 
-Unknown Reaction Forces:
+Reaction Forces and forces due to P:
 R1y
 R1z
 R2y
@@ -61,7 +62,8 @@ R3z
 RIz=RI*cos(alpha)
 RIy=RI*sin(alpha)
 
-
+FIIz=P*cos(alpha) (force due to P in corotated frame)
+FIIy=P*sin(alpha) (force due to P in corotated frame)
 
 =======
 v(x3)+theta(x3)*zhat=d3
