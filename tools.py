@@ -4,7 +4,6 @@
 #for single integration tool, 3/8 simpson rule
 #for double integration tool, normal simpson rule
 
-import numpy as np
 
 def f(x):
     return 1 / x

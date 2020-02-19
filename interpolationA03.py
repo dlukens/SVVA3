@@ -94,7 +94,7 @@ def interpolate(force, grid):
       
     return coeff
 
-def plotinterp(delta, grid, coeff):
+def interplot(delta, grid, coeff):
     #Use negative step size
     n = len(grid)-1
 
@@ -116,8 +116,8 @@ coeff_z = interpolate(aeroforce_z, data_z)
 coeff_x = interpolate(aeroforce_x, data_x)
 
 
-plotinterp(0.0001, data_x, coeff_x[5,:,:])
-plotinterp(-0.0001, data_z, coeff_z[5,:,:])
+interplot(0.0001, data_x, coeff_x[5,:,:])
+interplot(-0.0001, data_z, coeff_z[5,:,:])
 
 
 
