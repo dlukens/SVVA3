@@ -110,7 +110,9 @@ def interplot(delta, grid, coeff):
             
     plt.plot(z, S)
     plt.show()
-            
+
+
+#Calling Functions
 
 coeff_z = interpolate(aeroforce_z, data_z)
 coeff_x = interpolate(aeroforce_x, data_x)
