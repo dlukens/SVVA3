@@ -47,6 +47,7 @@ Sy(0)=0
 Sz(0)=0
 v(x1)+theta(x1)*zhat=d1*cos(alpha)
 v(x2)+theta(x2)*zhat=d2=0
+<<<<<<< HEAD
 v(x3)+theta(x3)*zhat=d3*cos(alpha)
 
 
@@ -62,3 +63,8 @@ RIy=RI*sin(alpha)
 
 
 
+=======
+v(x3)+theta(x3)*zhat=d3
+
+aeroforce_z --> aeroforce data for every z coordinate on a given cord
+>>>>>>> 3af514d1be3612fff3c84fa59da52dabd3f7c7da
