@@ -33,6 +33,20 @@ v =deflection in y direction
 
 theta =twist angle
 
+Geometry Variables:
+Ca = aileron chord length [m]
+La = aileron span [m]
+x1 = x-coordinate hinge 1 [m]
+x2 = x-coordinate hinge 2 [m]
+x3 = x-coordinate hinge 3 [m]
+xA = spacing between actuator I & II [m]
+h = aileron profile thickness(height) [m]
+Tsk = skin thickness [mm]
+Tsp = spar thickness [mm]
+Tst = stringer thickness [mm]
+Hst = stiffener height [mm]
+Wst = stiffener width [mm]
+Nst = number of stringers
 
 
 Boundary Conditions:
