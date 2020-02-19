@@ -15,8 +15,8 @@ Nx = 41
 Ca = 0.515
 la = 2.691
 
-data_z = np.zeros(Nz)
-data_x = np.zeros(Nx)
+data_z = np.zeros(Nz) #Z-coordinats of the grid
+data_x = np.zeros(Nx) #X-coordinates of the grid
 
 def theta(i,N):
     t =  math.pi*(i-1)/N
