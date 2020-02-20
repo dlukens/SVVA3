@@ -12,8 +12,8 @@ Nx = 41
 Ca = 0.515
 la = 2.691
 
-data_z = np.zeros(Nz)
-data_x = np.zeros(Nx)
+grid_z = np.zeros(Nz)
+grid_x = np.zeros(Nx)
 
 def theta(i,N):
     t =  math.pi*(i-1)/N
@@ -21,11 +21,11 @@ def theta(i,N):
 
 #Grid on chord - Z-Axis
 for i in range(1, Nz+1):
-    data_z[i-1] = -Ca/4*(2 - math.cos(theta(i, Nz)) - math.cos(theta(i+1, Nz)))
+    grid_z[i-1] = -Ca/4*(2 - math.cos(theta(i, Nz)) - math.cos(theta(i+1, Nz)))
     
 #Grid on span - X-Axis
 for i in range(1, Nx+1):
-    data_x[i-1] = la/4*(2 - math.cos(theta(i, Nx)) - math.cos(theta(i+1, Nx)))
+    grid_x[i-1] = la/4*(2 - math.cos(theta(i, Nx)) - math.cos(theta(i+1, Nx)))
 
 ######### interpolation ##########
 
@@ -101,7 +101,7 @@ def interplot(delta, grid, C0):
     S = []
     z = []
     
-    #S(x) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
+    #S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
     
     for t in range(0,n-1):
         for u in np.arange(grid[t], grid[t+1], delta):
@@ -114,12 +114,12 @@ def interplot(delta, grid, C0):
 
 #Calling Functions
 
-C0_z = interpolate(aeroforce_z, data_z)
-C0_x = interpolate(aeroforce_x, data_x)
+C0_z = interpolate(aeroforce_z, grid_z)
+C0_x = interpolate(aeroforce_x, grid_x)
 
 
-#interplot(0.0001, data_x, C0_x[5,:,:])
-#interplot(-0.0001, data_z, C0_z[5,:,:])
+interplot(0.0001, grid_x, C0_x[5,:,:])
+interplot(-0.0001, grid_z, C0_z[5,:,:])
 
 
 

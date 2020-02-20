@@ -11,7 +11,7 @@ def f(x):
 
 def integral(f, lower_bound, upper_bound, n):
     # f = function
-    # n = number of sub=intervals, must be multiple of 3
+    # n = number of sub-intervals, must be multiple of 3
     if n % 3 >=1:
         raise ValueError("n must be a multiple of 3")
     step_size = (upper_bound - lower_bound)/n

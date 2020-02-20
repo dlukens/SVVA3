@@ -1,44 +1,26 @@
 import numpy as np
 import tools as t
-from interpolationA03 import C0_z, C0_x, data_z, data_x, data
+from interpolationA03 import C0_z, C0_x, grid_z, grid_x
 
 #Integrating once the interpolated force function
+#S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
 
-def polyintegrate(C0):
-    C1 = np.zeros((len(C0[:,0,0]), 5, len(C0[0,0,:])))
-    #S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
-    #to
-    #S(z) = 1/4*a(z-z_i)^4 + 1/3*b(z-z_i)^3 + 1/2*c(z-z_i)^2 + dz + e
-    for i in range(len(C0_z[:,0,0])):
+
+print(C0_z[0,0,1])
+
+def integrate2(C0, grid):
+    n = 120
+    I = np.zeros((len(C0[:,:,0]), len(grid)-1))
     
-        C1[i,0,:] = 1/4*C0[i,0,:]
-        C1[i,1,:] = 1/3*C0[i,1,:]
-        C1[i,2,:] = 1/2*C0[i,2,:]
-        C1[i,3,:] = C0[i,3,:]
-        C1[i,4,:] = 1
-        
-    return(C1)
+    for i in range(len(C0[:,:,0])):
+        for j in range(len(grid)-1):
+            
+            def func(z):
+                return C0[i,0,j]*(z - grid[j])**3 + C0[i,1,j]*(z - grid[j])**2 + C0[i,2,j]*(z - grid[j]) + C0[i,3,j]
+            
+            I[i, j] = t.integral(func, grid[j], grid[j+1], n)
 
-C1_z = polyintegrate(C0_z)
-C1_x = polyintegrate(C0_x)
+    return I
 
-#Integrating twice the interpolated force function
-
-def polyintegrate2(C1):
-    C2 = np.zeros((len(C1[:,0,0]), 6, len(C1[0,0,:])))
-    #S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
-    #to
-    #S(z) = 1/5*a(z-z_i)^5 + 1/4*b(z-z_i)^4 + 1/3*c(z-z_i)^3 + dz^2 + ez
-    for i in range(len(C0_z[:,0,0])):
-    
-        C2[i,0,:] = 1/5*C1[i,0,:]
-        C2[i,1,:] = 1/4*C1[i,1,:]
-        C2[i,2,:] = 1/3*C1[i,2,:]
-        C2[i,3,:] = 1/2*C1[i,3,:]
-        C2[i,4,:] = C1[i,4,:]
-        C2[i,5,:] = 1
-        
-    return(C2)
-
-C2_z = polyintegrate(C1_z)
-C2_x = polyintegrate(C1_x)
+I_z = integrate2(C0_z, grid_z)
+# I_x = integrate2(C0_x, grid_x)
