@@ -46,5 +46,6 @@ Cp_function = itr.interpolate1d(Cp_z, grid_z[:-2])
 
 itr.interplot(0.001, grid_x, Cp_function)
 
+print(Cp_z)
 
 
