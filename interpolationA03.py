@@ -171,12 +171,14 @@ def interplot(delta, grid, C0):
     plt.plot(z, S)
     plt.show()
 
-
 #Calling Functions
 
 C0_z = interpolate(aeroforce_z, grid_z)
 C0_x = interpolate(aeroforce_x, grid_x)
 
 
-#interplot(0.0001, grid_x, C0_x[5,:,:])
-interplot(-0.0001, grid_z, C0_z[5,:,:])
+# interplot(0.0001, grid_x, C0_x[5,:,:])
+# interplot(-0.0001, grid_z, C0_z[5,:,:])
+
+    
+

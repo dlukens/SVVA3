@@ -3,6 +3,9 @@
 
 #for single integration tool, 3/8 simpson rule
 #for double integration tool, normal simpson rule
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 
 def f(x):
@@ -41,6 +44,36 @@ def dintegral(f, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound, ste
         x = x + step_size
     return(integral)
 
+#2D and 3D plot graphers
 
-#######INTERPOLATION TOOL###########
-
+def plot2d(gridx, gridz, data, title):
+    #2D contour plot
+    
+    X, Z = np.meshgrid(gridx, gridz)
+    Y = data
+    
+    plt.figure()
+    cp = plt.contourf(X, Z, Y)
+    plt.colorbar(cp)
+    
+    plt.title('{}'.format(title))
+    plt.xlabel('X along wingspan [m]')
+    plt.ylabel('Z along chord [m]')
+    plt.show()
+    
+def plot3d(gridx, gridz, data, title):
+    X, Z = np.meshgrid(gridx, gridz)
+    Y = data
+    
+    #3D plot
+    ax = plt.axes(projection='3d')
+    
+    ax.plot_surface(X, Z, Y, rstride=1, cstride=1,
+                    cmap='viridis', edgecolor='none')
+    
+    plt.title('{}'.format(title))
+    ax.set_xlabel('X along wingspan [m]')
+    ax.set_ylabel('Z along chord [m]')
+    ax.set_zlabel('Distributed load [kN/m^2]')
+    ax.view_init(azim=166)
+    plt.show()
