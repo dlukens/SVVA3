@@ -80,7 +80,7 @@ Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin
 
 Izz_sp = (1/12)*Tsp*h*h*h #MOI spar, no steiner term
 
-Izz_arc = (m.pi/8)*(h/2)**4 #MOI arc, no steiner term
+Izz_arc = (m.pi/2)*(h/2)**3*Tsk #MOI arc, no steiner term
 
 Izz = 0
 for i in y :
