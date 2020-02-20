@@ -42,6 +42,9 @@ II_x, II_xsum = integrate2(C1_x, grid_x)
 
 ##cp location
 Cp_z = -II_xsum/I_xsum[:-1]
+Cp_function = itr.interpolate1d(Cp_z, grid_z[:-2])
+
+itr.interplot(0.001, grid_x, Cp_function)
 
 
 

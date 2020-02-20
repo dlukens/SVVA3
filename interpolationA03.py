@@ -74,7 +74,7 @@ def interpolate(force, grid):
         
         #Solve for a and c   
         for l in range(0, n):
-            c[l] = (d[l+1]-d[l])/h[l] - h[l]*(2*b[l]+b[l+1])/3        #c variable solved
+            c[l] = (d[l+1] - d[l])/h[l] - h[l]*(2*b[l]+b[l+1])/3        #c variable solved
             a[l] = (b[l+1] - b[l])/(3*h[l])                           #a variable solved
             
         #Remove last element to have 80 intervals
@@ -90,6 +90,66 @@ def interpolate(force, grid):
         C0[r, 1, :] = b
         C0[r, 2, :] = c
         C0[r, 3, :] = d
+        
+      
+    return C0
+
+def interpolate1d(force, grid):
+    C0 = np.zeros((4, len(force)-1))
+
+
+    n = len(grid)-1
+    h = np.zeros(n)
+    a = np.zeros(n)
+    b = np.zeros(n)
+    c = np.zeros(n)
+    d = force #d variable solved
+    
+    
+    for i in range(0,n):           
+        h[i] = (grid[i+1] - grid[i])
+    
+    #create matrix A
+    A = np.zeros((n+1, n+1))
+    
+    #non-zero corners of matrix A (top left, bottom right)
+    A[0,0] = 1
+    A[n,n] = 1
+    
+    #rest of non-zero values of matrix A
+    for j in range(1,n):
+        A[j,j] = (h[j-1] + h[j])/3
+        A[j,j-1] = h[j-1]/6
+        A[j,j+1] = h[j]/6
+        
+    #create v_matrix
+    v = np.zeros(n+1)  
+        
+    for k in range(0,n-1):
+        v[k+1] = 3*((d[k+2]-d[k+1])/h[k+1] - (d[k+1]-d[k])/h[k])
+    
+    #solve A*b = v
+    #b are the values M(0) --> M(n)
+    b = np.linalg.solve(A, v)
+    
+    #Solve for a and c   
+    for l in range(0, n):
+        c[l] = (d[l+1]-d[l])/h[l] - h[l]*(2*b[l]+b[l+1])/3        #c variable solved
+        a[l] = (b[l+1] - b[l])/(3*h[l])                           #a variable solved
+        
+    #Remove last element to have 80 intervals
+    b = b[:-1]
+    d = d[:-1]
+    
+    #Now 3D array with all C0icients for each section and each chord
+        #Index 0: Spanwise chord section - along X-axis
+        #Index 1: C0icient value (a, b, c, d)
+        #Index 2: Chordwise interval - along -Z-Axis
+    
+    C0[0, :] = a
+    C0[1, :] = b
+    C0[2, :] = c
+    C0[3, :] = d
         
       
     return C0
@@ -110,7 +170,7 @@ def interplot(delta, grid, C0):
             
     plt.plot(z, S)
     plt.show()
-
+    
 
 #Calling Functions
 
@@ -118,8 +178,8 @@ C0_z = interpolate(aeroforce_z, grid_z)
 C0_x = interpolate(aeroforce_x, grid_x)
 
 
-interplot(0.0001, grid_x, C0_x[5,:,:])
-interplot(-0.0001, grid_z, C0_z[5,:,:])
+# interplot(0.0001, grid_x, C0_x[5,:,:])
+# interplot(-0.0001, grid_z, C0_z[5,:,:])
 
 
 
