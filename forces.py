@@ -43,5 +43,6 @@ II_x, II_xsum = integrate2(C1_x, grid_x)
 ##cp location
 Cp_z = -II_xsum/I_xsum[:-1]
 
+print(Cp_z)
 
 
