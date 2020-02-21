@@ -55,26 +55,27 @@ def integrate2(C1a, grid):
 
     return I, I_sum
 
-I_z, I_zsum = integrate(C0_z, grid_z)
-I_x, I_xsum = integrate(C0_x, grid_x)
+Ia_z, Ia_zsum = integrate(C0_z, grid_z)
+Ia_x, Ia_xsum = integrate(C0_x, grid_x)
     
 
 #Coefficients from first integral
 
-C1_z = polyintegrate(C0_z)
-C1_x = polyintegrate(C0_x)
+C1a_z = polyintegrate(C0_z)
+C1a_x = polyintegrate(C0_x)
 
-itr.interplot(0.001, grid_x, C1_x[0,:,:])
+itr.interplot(0.001, grid_x, C1a_x[0,:,:])
 
 
 #Second integration
 
-II_z, II_zsum = integrate2(C1_z, grid_z)
-II_x, II_xsum = integrate2(C1_x, grid_x)
+IIa_z, IIa_zsum = integrate2(C1a_z, grid_z)
+IIa_x, IIa_xsum = integrate2(C1a_x, grid_x)
 
 
 ##cp location
-Cp_x = -II_zsum/I_zsum
+Cpa_x = -IIa_zsum/Ia_zsum
+# Cp_coeff = itr.interpolate1d(Cp_x, grid_x[:-1]) #Grid is halved to adjust for cpx datapoints
 
 
 # itr.interplot(0.001, grid_x[:-2], Cp_coeff)
@@ -94,7 +95,7 @@ def plot2d(gridx, gridz, data, title):
     plt.title('{}'.format(title))
     plt.xlabel('X along wingspan [m]')
     plt.ylabel('Z along chord [m]')
-    plt.plot(grid_x[:-1], Cp_x)
+    plt.plot(grid_x[:-1], Cpa_x)
     plt.show()
     
 

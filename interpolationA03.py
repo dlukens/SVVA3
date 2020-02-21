@@ -32,6 +32,9 @@ for i in range(1, Nx+1):
 aeroforce_z = data.T
 aeroforce_x = data
 
+# plt.plot(grid_x, aeroforce_x[0,:])
+# plt.show()
+
 
 def interpolate(force, grid):
     C0 = np.zeros((len(force)-1, 4, len(force.T)-1))
@@ -155,7 +158,6 @@ def interpolate1d(force, grid):
     return C0
 
 def interplot(delta, grid, C0):
-    #Use negative step size
     n = len(grid)-1
 
     S = []
@@ -177,8 +179,8 @@ C0_z = interpolate(aeroforce_z, grid_z)
 C0_x = interpolate(aeroforce_x, grid_x)
 
 
-# interplot(0.0001, grid_x, C0_x[5,:,:])
-# interplot(-0.0001, grid_z, C0_z[5,:,:])
+# interplot(0.0001, grid_x, C0_x[0,:,:])
+# interplot(-0.0001, grid_z, C0_z[0,:,:])
 
     
 
