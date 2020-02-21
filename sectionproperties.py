@@ -105,3 +105,28 @@ for i in z[1:] :
     
 Iyy += Ast*Cz*Cz + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc + Ad_yarc # [m^4]
 print(Iyy)
+
+# Shear center
+
+Sy = 1 # [N] unit shear load
+
+# counterclockwise positive
+q12 = 0
+q23 =  Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4) 
+q31 = -Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4)
+q21 = 0
+qs0_1 = Sy*h*h/(6*Izz) * (1/(m.pi/(2*Tsk) + 1/Tsp))
+qs0_2 = Sy/(3*Izz) * ((h*h*h/4 + h*Lssk*Lssk)/(h/Tsp + 2*Lssk/Tsk))
+
+# final shear flows
+q12 += qs0_1
+q23 += qs0_2
+q31 += qs0_2
+q21 += qs0_1 + qs0_2
+
+# shear center
+d = h*Lssk/(4*Lssk*Lssk + h*h) * m.sqrt(h*h + 4*Lssk*Lssk) # moment arm for q23 and q31
+
+Mi = q12*m.pi*h*h/4 + q23*Lssk*d + q31*Lssk*d
+SCz = -Mi/Sy # shear center [m]
+print(SCz)
