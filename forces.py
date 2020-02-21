@@ -57,14 +57,17 @@ def integrate2(C1a, grid):
 
 I_z, I_zsum = integrate(C0_z, grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
+
+Ax = itr.interpolate1d(I_zsum, grid_x[:-1])
+
+itr.interplot(0.001, grid_x, Ax)
+
     
 
 #Coefficients from first integral
 
 C1_z = polyintegrate(C0_z)
 C1_x = polyintegrate(C0_x)
-
-itr.interplot(0.001, grid_x, C1_x[0,:,:])
 
 
 #Second integration
@@ -75,7 +78,7 @@ II_x, II_xsum = integrate2(C1_x, grid_x)
 
 ##cp location
 Cp_x = -II_zsum/I_zsum
-
+Cp_coeff = itr.interpolate1d(Cp_x, grid_x[:-1])
 
 # itr.interplot(0.001, grid_x[:-2], Cp_coeff)
 
@@ -98,7 +101,7 @@ def plot2d(gridx, gridz, data, title):
     plt.show()
     
 
-plot2d(grid_x, grid_z, data, 'Distributed force q')
+# plot2d(grid_x, grid_z, data, 'Distributed force q')
 # plot2d(grid_x[:-1], grid_z[:-1], I_x, 'First integral')
 # plot2d(grid_x[:-2], grid_z[:-2], II_x, 'Second Integral')
 
