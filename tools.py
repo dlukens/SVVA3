@@ -44,6 +44,8 @@ def dintegral(f, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound, ste
         x = x + step_size
     return(integral)
 
+
+
 #2D and 3D plot graphers
 
 def plot2d(gridx, gridz, data, title):
