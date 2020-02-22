@@ -90,18 +90,18 @@ for i in y :
 Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
 print(Izz)
 
-Iyy_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(0.5*m.pi - angle_Lssk))**2
-Ad_yss = Lssk*Tsk*(0.5*Lssk*m.cos(angle_Lssk) - Cz - Ca)**2
+Iyy_ss = (1/12)*Tsk*Lssk**3*(m.cos(angle_Lssk))**2
+Ad_yss = Lssk*Tsk*(Ca+Cz-0.5*Lssk*m.cos(angle_Lssk))**2
 
-Iyy_sp = Tsp*h*(Cz - 0.5*h)**2 # only steiner term
+Iyy_sp = Tsp*h*(-Cz - 0.5*h)**2 # only steiner term
 
-Iyy_arc = Izz_arc
+Iyy_arc = 0.5*h*Tsk*((m.pi*(-Cz-0.5*h)**2) -(4*(-Cz-0.5*h))+(0.5*m.pi))#Includes Steiner term
 Ad_yarc = 0.5*m.pi*h*Tsk*(h/m.pi - 0.5*h - Cz)**2
 
 Iyy = 0
 for i in z[1:] :
-    steiner = 2*Ast*(i - Cz)**2
+    steiner = 2*Ast*(Cz-i)**2
     Iyy += steiner
     
-Iyy += Ast*Cz*Cz + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc + Ad_yarc # [m^4]
+Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc  # [m^4]
 print(Iyy)
