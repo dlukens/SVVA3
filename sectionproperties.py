@@ -75,37 +75,43 @@ z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
 
 # Moments of inertia
-Izz_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(angle_Lssk))**2 #MOI one straight skin
-Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin
+Izz_ss = ((1/12)*Tsk*Lssk**3)*(m.sin(angle_Lssk))**2 #MOI one straight skin #checked
+Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin #checked
 
-Izz_sp = (1/12)*Tsp*h*h*h #MOI spar, no steiner term
+Izz_sp = (1/12)*Tsp*h**3 #MOI spar, no steiner term #checked
 
+<<<<<<< HEAD
 Izz_arc = (m.pi/2)*(h/2)**3*Tsk #MOI arc, no steiner term
+=======
+Izz_arc = Tsk*(m.pi/16)*(h)**3 #MOI arc, no steiner term 
+>>>>>>> 380f67593718aad2703d73d60f3eb558d1a05016
 
 Izz = 0
 for i in y :
-    steiner = 2*Ast*i*i
+    steiner = 2*Ast*i**2
     Izz += steiner
 
 Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
 print(Izz)
 
-Iyy_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(0.5*m.pi - angle_Lssk))**2
-Ad_yss = Lssk*Tsk*(0.5*Lssk*m.cos(angle_Lssk) - Cz - Ca)**2
+Iyy_ss = (1/12)*Tsk*Lssk**3*(m.cos(angle_Lssk))**2
+Ad_yss = Lssk*Tsk*(Ca+Cz-0.5*Lssk*m.cos(angle_Lssk))**2
 
-Iyy_sp = Tsp*h*(Cz - 0.5*h)**2 # only steiner term
+Iyy_sp = Tsp*h*(-Cz - 0.5*h)**2 # only steiner term
 
-Iyy_arc = Izz_arc
-Ad_yarc = 0.5*m.pi*h*Tsk*(h/m.pi - 0.5*h - Cz)**2
+
+Iyy_arc=Izz_arc
+Ad_yarc = 0.5*m.pi*h*Tsk*(Cz**2 + 0.5*h*(0.5*h - 2 * -Cz + 4 * -Cz / m.pi - 4 * 0.5*h / m.pi))
 
 Iyy = 0
 for i in z[1:] :
-    steiner = 2*Ast*(i - Cz)**2
+    steiner = 2*Ast*(Cz-i)**2
     Iyy += steiner
     
-Iyy += Ast*Cz*Cz + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc + Ad_yarc # [m^4]
+Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc +Ad_yarc # [m^4]
 print(Iyy)
 
+<<<<<<< HEAD
 # Shear center
 
 Sy = 1 # [N] unit shear load
@@ -130,3 +136,6 @@ d = h*Lssk/(4*Lssk*Lssk + h*h) * m.sqrt(h*h + 4*Lssk*Lssk) # moment arm for q23 
 Mi = q12*m.pi*h*h/4 + q23*Lssk*d + q31*Lssk*d
 SCz = -Mi/Sy # shear center [m]
 print(SCz)
+=======
+
+>>>>>>> 380f67593718aad2703d73d60f3eb558d1a05016
