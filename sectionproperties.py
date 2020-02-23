@@ -75,16 +75,16 @@ z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
 
 # Moments of inertia
-Izz_ss = (1/12)*Tsk*Lssk*Lssk*Lssk*(m.sin(angle_Lssk))**2 #MOI one straight skin
-Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin
+Izz_ss = ((1/12)*Tsk*Lssk**3)*(m.sin(angle_Lssk))**2 #MOI one straight skin #checked
+Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin #checked
 
-Izz_sp = (1/12)*Tsp*h*h*h #MOI spar, no steiner term
+Izz_sp = (1/12)*Tsp*h**3 #MOI spar, no steiner term #checked
 
-Izz_arc = (m.pi/8)*(h/2)**4 #MOI arc, no steiner term
+Izz_arc = Tsk*(m.pi/16)*(h)**3 #MOI arc, no steiner term 
 
 Izz = 0
 for i in y :
-    steiner = 2*Ast*i*i
+    steiner = 2*Ast*i**2
     Izz += steiner
 
 Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
@@ -105,3 +105,5 @@ for i in z[1:] :
     
 Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc  # [m^4]
 print(Iyy)
+
+
