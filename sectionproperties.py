@@ -9,6 +9,9 @@ Created on Tue Feb 18 23:10:17 2020
 import math as m
 import matplotlib.pyplot as plt
 
+import math as m
+import matplotlib.pyplot as plt
+
 #### section properties ####
 
 #definition of aileron geometry variables
@@ -80,11 +83,7 @@ Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin #c
 
 Izz_sp = (1/12)*Tsp*h**3 #MOI spar, no steiner term #checked
 
-<<<<<<< HEAD
-Izz_arc = (m.pi/2)*(h/2)**3*Tsk #MOI arc, no steiner term
-=======
 Izz_arc = Tsk*(m.pi/16)*(h)**3 #MOI arc, no steiner term 
->>>>>>> 380f67593718aad2703d73d60f3eb558d1a05016
 
 Izz = 0
 for i in y :
@@ -111,7 +110,6 @@ for i in z[1:] :
 Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc +Ad_yarc # [m^4]
 print(Iyy)
 
-<<<<<<< HEAD
 # Shear center
 
 Sy = 1 # [N] unit shear load
@@ -136,6 +134,6 @@ d = h*Lssk/(4*Lssk*Lssk + h*h) * m.sqrt(h*h + 4*Lssk*Lssk) # moment arm for q23 
 Mi = q12*m.pi*h*h/4 + q23*Lssk*d + q31*Lssk*d
 SCz = -Mi/Sy # shear center [m]
 print(SCz)
-=======
 
->>>>>>> 380f67593718aad2703d73d60f3eb558d1a05016
+
+
