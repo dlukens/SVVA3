@@ -18,7 +18,7 @@ La = 2.691      #aileron span [m]
 x1 = 0.174       #x-coordinate hinge 1 [m]
 x2 = 1.051       #x-coordinate hinge 2 [m]
 x3 = 2.512       #x-coordinate hinge 3 [m]
-xA = 0.3       #spacing between actuator I & II [m]
+xa = 0.3       #spacing between actuator I & II [m]
 h = 0.248      #aileron profile thickness (height) [m]
 Tsp = 0.0022   #spar thickness [m]
 Tst = 0.0012   #stiffener thickness [m]
@@ -30,6 +30,7 @@ delta_y1 = 1.034 #vertical displacement of hinge 1 [cm]
 delta_y3 = 2.066 #vertical displacement of hinge 3 [cm]
 theta = 25      #maximum upward deflection [deg]
 P = 20.6        #maximum load in actuator 2 [kN]
+E=73.1 *10**9   #Young's modulus [Pa]
 
 #calculate z_coordinates stiffeners
 Lssk = m.sqrt(0.5*0.5*h*h + (Ca - 0.5*h)*(Ca - 0.5*h)) #length of straight skin (one half)
@@ -149,8 +150,9 @@ b = np.matrix([[T],
 
 X = np.zeros((3,3))
 x1, x2, x3 = 2*A1, 2*A2, 0
-x4, x5, x6 = (1/(2*A1))*(m.pi*h/(2*Tsk) + h/Tsp), (-1/(2*A1))*h/Tsp, -G
-x7, x8, x9 = (-1/(2*A2))*h/Tsp, (1/(2*A2))*(h/Tsp + 2*Lssk/Tsk), -G
+x4, x5, x6 = 1/(2*A1)*(m.pi*h/(2*Tsk) + h/Tsp), -1/(2*A1)*h/Tsp, -G
+x7, x8, x9 = -1*h/(2*Tsp*A2), 1*(h/Tsp + 2*Lssk/Tsk)/(2*A2), -G
+
 
 X[0,:] = x1, x2, x3
 X[1,:] = x4, x5, x6
