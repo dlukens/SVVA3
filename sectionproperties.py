@@ -8,9 +8,7 @@ Created on Tue Feb 18 23:10:17 2020
 
 import math as m
 import matplotlib.pyplot as plt
-
-import math as m
-import matplotlib.pyplot as plt
+import numpy as np
 
 #### section properties ####
 
@@ -63,7 +61,7 @@ Ast = Hst * Tst + Wst * Tst                     #stiffener area [mm^2]
 
 Cy = 0 # y_coordinate of centroid of cross section [m]
 
-#centroid z_coordinate (y_coordinate is on symmetry axis)
+# Centroid z_coordinate (y_coordinate is on symmetry axis)
 
 z_bar_Lssk = m.cos(angle_Lssk)*0.5*Lssk - Ca                   #centroid Lssk
 z_bar_arc = h/m.pi - 0.5*h                                   #centroid semi-arc
@@ -77,7 +75,7 @@ print(Cz)
 z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
 
-# Moments of inertia
+# Moments of Inertia
 Izz_ss = ((1/12)*Tsk*Lssk**3)*(m.sin(angle_Lssk))**2 #MOI one straight skin #checked
 Ad_zss = Lssk*Tsk*(0.5*Lssk*m.sin(angle_Lssk))**2 #steiner term straight skin #checked
 
@@ -110,30 +108,60 @@ for i in z[1:] :
 Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc +Ad_yarc # [m^4]
 print(Iyy)
 
-# Shear center
+# Shear Center
 
 Sy = 1 # [N] unit shear load
 
-# counterclockwise positive
-q12 = 0.0
-q23 =  Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4) 
-q31 = -Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4)
-q21 = 0
-qs0_1 = Sy*h*h/(6*Izz) * (1/(m.pi/(2*Tsk) + 1/Tsp))
-qs0_2 = Sy/(3*Izz) * ((h*h*h/4 + h*Lssk*Lssk)/(h/Tsp + 2*Lssk/Tsk))
+# clockwise positive
+q12 = 0
+q23 = -Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4) 
+q31 =  Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4)
+q142 = 0
+qs0_1 = Sy*h**3/(3*Izz*(m.pi*h/(2*Tsk) + h/Tsp))
+qs0_2 = Sy*h*(Lssk**2 - h**2)/(12*Izz*(2*Lssk/Tsk + h/Tsp))
 
 # final shear flows
 q12 += qs0_1
 q23 += qs0_2
 q31 += qs0_2
-q21 += qs0_1 + qs0_2
+q142 += qs0_1 + qs0_2
 
-# shear center
-d = h*Lssk/(4*Lssk*Lssk + h*h) * m.sqrt(h*h + 4*Lssk*Lssk) # moment arm for q23 and q31
+# taking moment about midpoint of the spar and clockwise positive
+d = h*m.cos(angle_Lssk)/2 # moment arm for q23 and q31
+Mi = h/2*(m.pi*h*qs0_1/2 - Sy*h**3*Tsk/(4*Izz)) + d*(2*qs0_2*Lssk - Sy*h*Lssk**2*Tsk/(12*Izz))
 
-Mi = q12*m.pi*h*h/4 + q23*Lssk*d + q31*Lssk*d
-SCz = -Mi/Sy # shear center [m]
+Ksi = -Mi/Sy # distance midpoint spar - shear center (positive)
+SCz = -h/2 - Ksi # shear center [m]
 print(SCz)
+
+# Torsional Stiffness
+
+T = 1 # [Nm] unit torsional load
+G = 28e9 # Aluminium 2024-T3 shear modulus [Pa]
+
+A1 = 0.5*m.pi*(h/2)**2 # area of cell 1
+A2 = (Ca - h/2)*h/2 # area of cell 2
+
+# setting up the 3x3 system
+b = np.matrix([[T],
+               [0],
+               [0]])
+
+X = np.zeros((3,3))
+x1, x2, x3 = 2*A1, 2*A2, 0
+x4, x5, x6 = (1/(2*A1))*(m.pi*h/(2*Tsk) + h/Tsp), (-1/(2*A1))*h/Tsp, -G
+x7, x8, x9 = (-1/(2*A2))*h/Tsp, (1/(2*A2))*(h/Tsp + 2*Lssk/Tsk), -G
+
+X[0,:] = x1, x2, x3
+X[1,:] = x4, x5, x6
+X[2,:] = x7, x8, x9
+
+Q = np.linalg.solve(X, b)
+dtheta_dz = Q[2,0] # rate of twist [rad/m]
+
+J = T/(G*dtheta_dz) # torsional stiffness [m^4]
+print(J)
+
 
 
 
