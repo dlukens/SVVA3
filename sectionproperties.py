@@ -111,7 +111,7 @@ print(Iyy)
 Sy = 1 # [N] unit shear load
 
 # counterclockwise positive
-q12 = 0
+q12 = 0.0
 q23 =  Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4) 
 q31 = -Sy/Izz * (Ast*(y_st2+y_st3+y_st4+y_st5) + h*Tsk*Lssk/4)
 q21 = 0
