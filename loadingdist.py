@@ -123,8 +123,12 @@ def Sz(x): return R1z*step(x, x1, 0) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 0)
 #Deflection in Y-axis
 def v(x): return (-1/(E*Izz))*(quadrupleintegrate(Ax, dx) - R1y*step(x, x1, 3) - RI*math.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*math.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) +C1*step(x,0, 1) + C2)
 
+<<<<<<< HEAD
 #Deflection in Z-axis
 def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*math.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3)+C3*step(x,0, 1) + C4)
 
 #Twist 
 def theta(x): return (1/(G*J))*(doubleintegral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,1) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) +C5)
+=======
+print(Tx, My, Sz, Mz, Sy)
+>>>>>>> 6bb4a10385ffcd03e61ded4379e47aefdd20df44
