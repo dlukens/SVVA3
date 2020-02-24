@@ -1,7 +1,6 @@
 import numpy as np
-import tools as t
-from interpolationA03 import C0_z, C0_x, grid_z, grid_x, data
-import interpolationA03 as itr
+from interp import C0_z, C0_x, grid_z, grid_x, data
+import interp
 import matplotlib.pyplot as plt
 
 #Integrating once the interpolated force function
@@ -58,11 +57,7 @@ def integrate2(C1, grid):
 I_z, I_zsum = integrate(C0_z, grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
 
-Ax = itr.interpolate1d(I_zsum, grid_x)
-
-# itr.interplot(0.001, grid_x, Ax)
-
-    
+A_coeff = interp.interpolate1d(I_zsum, grid_x)    
 
 #Coefficients from first integral
 
@@ -71,34 +66,33 @@ C1_x = polyintegrate(C0_x)
 
 
 #Second integration
-
 II_z, II_zsum = integrate2(C1_z, grid_z)
 II_x, II_xsum = integrate2(C1_x, grid_x)
 
 
 ##cp location
 Cp_x = -II_zsum/I_zsum
-Cp_coeff = itr.interpolate1d(Cp_x, grid_x)
+Cp_coeff = interp.interpolate1d(Cp_x, grid_x)
 
-# itr.interplot(0.001, grid_x[:-2], Cp_coeff)
+# interp.interplot(0.001, grid_x[:-2], Cp_coeff)
 
 
 ###Plotting###
-def plot2d(gridx, gridz, data, title):
-    #2D contour plot
+# def plot2d(gridx, gridz, data, title):
+#     #2D contour plot
     
-    X, Z = np.meshgrid(gridx, gridz)
-    Y = data
+#     X, Z = np.meshgrid(gridx, gridz)
+#     Y = data
     
-    plt.figure()
-    cp = plt.contourf(X, Z, Y)
-    plt.colorbar(cp)
+#     plt.figure()
+#     cp = plt.contourf(X, Z, Y)
+#     plt.colorbar(cp)
     
-    plt.title('{}'.format(title))
-    plt.xlabel('X along wingspan [m]')
-    plt.ylabel('Z along chord [m]')
-    plt.plot(grid_x[:-1], Cp_x)
-    plt.show()
+#     plt.title('{}'.format(title))
+#     plt.xlabel('X along wingspan [m]')
+#     plt.ylabel('Z along chord [m]')
+#     plt.plot(grid_x[:-1], Cp_x)
+#     plt.show()
     
 
 # plot2d(grid_x, grid_z, data, 'Distributed force q')
