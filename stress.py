@@ -8,7 +8,7 @@ import math as m
 import matplotlib as plt
 from sectionproperties import *
 import numpy as np
-from loadingdist import *
+
 
 #Make a numerical model of the cross section 
 #Make a numerical model of the whole aileron
