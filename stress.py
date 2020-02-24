@@ -53,7 +53,15 @@ endnode=2.01
 nodesnumber=100
 deltax=(endnode-beginnode)/(nodesnumber-1)
 
+bendingstress=np.zeros(nodesnumber,2*Npoints-1)
 
-    
+for i in range(nodesnumber):
+    x=beginnode+deltax*i
+    for j in range(2*Npoints-1):
+        sigma = My(x)*z/Iyy + Mz(x)*y/Izz
+        bendingstress(i,j)=sigma
+        
+        
+
 
 
