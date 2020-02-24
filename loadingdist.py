@@ -131,4 +131,4 @@ def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - RI*math.cos(alpha)*(step(x, 
 def theta(x): return (1/(G*J))*(doubleintegral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,1) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) +C5)
 =======
 print(Tx, My, Sz, Mz, Sy)
->>>>>>> 6bb4a10385ffcd03e61ded4379e47aefdd20df44
+
