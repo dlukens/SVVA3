@@ -23,33 +23,33 @@ def polyintegrate(C0):
     return(C1)
 
 
-def integrate(C0a, grid):
-    I = np.zeros((len(C0a[:,:,0]), len(grid)-1))
+def integrate(C0, grid):
+    I = np.zeros((len(C0[:,0,0]), len(grid)))
     I_sum = np.zeros(len(grid))
     
-    for i in range(len(C0a[:,:,0])):
-        for j in range(len(C0a[0,0,:])):
+    for i in range(len(C0[:,0,0])):
+        for j in range(len(C0[0,0,:])):
             
             def f(z):
-                return 1/4*C0a[i,0,j]*(z - grid[j])**4 + 1/3*C0a[i,1,j]*(z - grid[j])**3 + 1/2*C0a[i,2,j]*(z - grid[j])**2 + C0a[i,3,j]*z
+                return 1/4*C0[i,0,j]*(z - grid[j])**4 + 1/3*C0[i,1,j]*(z - grid[j])**3 + 1/2*C0[i,2,j]*(z - grid[j])**2 + C0[i,3,j]*z
             
-            I[i, j] = abs(f(grid[j+1]) - f(grid[j]))
+            I[i, j+1] = I[i, j] + abs(f(grid[j+1]) - f(grid[j]))
             
     I_sum = I.sum(axis=1)
 
     return I, I_sum
 
-def integrate2(C1a, grid):
-    I = np.zeros((len(C1a[:,:,0]), len(grid)-1))
+def integrate2(C1, grid):
+    I = np.zeros((len(C1[:,0,0]), len(grid)))
     I_sum = np.zeros(len(grid))
     
-    for i in range(len(C1a[:,:,0])):
-        for j in range(len(C1a[0,0,:])):
+    for i in range(len(C1[:,0,0])):
+        for j in range(len(C1[0,0,:])):
             
             def f(z):
-                return 1/5*C1a[i,0,j]*(z - grid[j])**5 + 1/4*C1a[i,1,j]*(z - grid[j])**4 + 1/3*C1a[i,2,j]*(z - grid[j])**3 + 1/2*C1a[i,3,j]*z**2
+                return 1/5*C1[i,0,j]*(z - grid[j])**5 + 1/4*C1[i,1,j]*(z - grid[j])**4 + 1/3*C1[i,2,j]*(z - grid[j])**3 + 1/2*C1[i,3,j]*z**2
             
-            I[i, j] = abs(f(grid[j+1]) - f(grid[j]))
+            I[i, j+1] = I[i, j] + abs(f(grid[j+1]) - f(grid[j]))
             
     I_sum = I.sum(axis=1)
 
@@ -58,9 +58,9 @@ def integrate2(C1a, grid):
 I_z, I_zsum = integrate(C0_z, grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
 
-Ax = itr.interpolate1d(I_zsum, grid_x[:-1])
+Ax = itr.interpolate1d(I_zsum, grid_x)
 
-itr.interplot(0.001, grid_x, Ax)
+# itr.interplot(0.001, grid_x, Ax)
 
     
 
@@ -78,7 +78,7 @@ II_x, II_xsum = integrate2(C1_x, grid_x)
 
 ##cp location
 Cp_x = -II_zsum/I_zsum
-Cp_coeff = itr.interpolate1d(Cp_x, grid_x[:-1])
+Cp_coeff = itr.interpolate1d(Cp_x, grid_x)
 
 # itr.interplot(0.001, grid_x[:-2], Cp_coeff)
 

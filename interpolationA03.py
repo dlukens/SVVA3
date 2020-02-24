@@ -37,9 +37,9 @@ aeroforce_x = data
 
 
 def interpolate(force, grid):
-    C0 = np.zeros((len(force)-1, 4, len(force.T)-1))
+    C0 = np.zeros((len(force), 4, len(force.T)-1))
 
-    for r in range(len(force)-1):
+    for r in range(len(force)):
 
         n = len(grid)-1
         h = np.zeros(n)
