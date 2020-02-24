@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
-from sectionproperties import *
+from sectionproperties import SCz, x2, xa
+import numpy as np
 import forces
 from forces import A_coeff, Cp_coeff
 from interp import grid_x, grid_z
@@ -18,8 +19,8 @@ def step(x, x1, exp): #Mcaulay step function
     else:
         return y**exp
 
-def A_SC_int(x, grid, A_coeff = A_coeff, SCz = SCz, Cp_coeff = Cp_coeff,):
-    idx = np.searchsorted(grid, x)-1
+def A_SC_int(x):
+    idx = np.searchsorted(grid_x, x)-1
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -28,19 +29,19 @@ def A_SC_int(x, grid, A_coeff = A_coeff, SCz = SCz, Cp_coeff = Cp_coeff,):
     f = Cp_coeff[1, idx]
     g = Cp_coeff[2, idx]
     h = Cp_coeff[3, idx]
-    return a*SCz/4*x**4 + b*SCz/3*x**3 + c*SCz/2*x**2 + d*SCz*x**2   \
-                        -  a/7*x**7                                  \
-                        - (a*f + b*e)/6*x**6                         \
-                        - (a*g + b*f + c*e)/5*x**5                   \
-                        - (a*h + b*g + c*f + d*e)/4*x**4             \
-                        - (b*h + c*g + d*f)/3*x**3                   \
-                        - (c*h + d*g)/2*x**2                         \
-                        -  d*h*x
+    return x*(a*SCz/4*(x-grid_x[idx])**3 + b*SCz/3*(x-grid_x[idx])**2 + c*SCz/2*(x-grid_x[idx]) + d*SCz   \
+                        -  a/7*(x-grid_x[idx])**6                                  \
+                        - (a*f + b*e)/6*(x-grid_x[idx])**5                         \
+                        - (a*g + b*f + c*e)/5*(x-grid_x[idx])**4                   \
+                        - (a*h + b*g + c*f + d*e)/4*(x-grid_x[idx])**3             \
+                        - (b*h + c*g + d*f)/3*(x-grid_x[idx])**2                   \
+                        - (c*h + d*g)/2*(x-grid_x[idx])                            \
+                        -  d*h)
                         
 
                         
-def A_SC_doubleint(x, grid, A_coeff, SCz, Cp_coeff):
-    idx = np.searchsorted(grid, x)-1
+def A_SC_doubleint(x):
+    idx = np.searchsorted(grid_x, x)-1
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -49,38 +50,51 @@ def A_SC_doubleint(x, grid, A_coeff, SCz, Cp_coeff):
     f = Cp_coeff[1, idx]
     g = Cp_coeff[2, idx]
     h = Cp_coeff[3, idx]
-    return a*SCz/(4*5)*x**5 + b*SCz/(3*4)*x**4 + c*SCz/(2*3)*x**3 + d*SCz/(2)*x**2 \
-                        -  a/(8*7)*x**8 \
-                        - (a*f + b*e)/(6*7)*x**7 \
-                        - (a*g + b*f + c*e)/(5*6)*x**6 \
-                        - (a*h + b*g + c*f + d*e)/(4*5)*x**5 \
-                        - (b*h + c*g + d*f)/(3*4)*x**4 \
-                        - (c*h + d*g)/(2*3)*x**3 \
-                        -  d*h/2*x**2
+    return x**2*(a*SCz/(4*5)*(x-grid_x[idx])**3 + b*SCz/(3*4)*(x-grid_x[idx])**2 + c*SCz/(2*3)*(x-grid_x[idx]) + d*SCz/2 \
+                        -  a/(8*7)*(x-grid_x[idx])**6 \
+                        - (a*f + b*e)/(6*7)*(x-grid_x[idx])**5 \
+                        - (a*g + b*f + c*e)/(5*6)*(x-grid_x[idx])**4 \
+                        - (a*h + b*g + c*f + d*e)/(4*5)*(x-grid_x[idx])**3 \
+                        - (b*h + c*g + d*f)/(3*4)*(x-grid_x[idx])**2 \
+                        - (c*h + d*g)/(2*3)*(x-grid_x[idx]) \
+                        -  d*h/2)
     
     
-def A_int(x, A_coeff=A_coeff):
-    return A_coeff[0, x]/4*x**4         \
-            + A_coeff[1, x]/3*x**3      \
-            + A_coeff[2, x]/2*x**2      \
-            + A_coeff[3, x]*x**1
-            
-    
-def A_doubleint(x, A_coeff=A_coeff):
-    return A_coeff[0, x]/(4*5)*x**5     \
-            + A_coeff[1, x]/(3*4)*x**4  \
-            + A_coeff[2, x]/(2*3)*x**3  \
-            + A_coeff[3, x]/2*x**2 
+def A_int(x):
+    idx = np.searchsorted(grid_x, x)-1
+    a = A_coeff[0, idx]
+    b = A_coeff[1, idx]
+    c = A_coeff[2, idx]
+    d = A_coeff[3, idx]    
+    return x*(a/4*(x-grid_x[idx])**3      \
+            + b/3*(x-grid_x[idx])**2      \
+            + c/2*(x-grid_x[idx])         \
+            + d)
 
-def A_quadint(x, A_coeff=A_coeff):
-    return A_coeff[0, x]/(4*5*6*7)*x**7     \
-            + A_coeff[1, x]/(3*4*5*6)*x**6  \
-            + A_coeff[2, x]/(2*3*4*5)*x**5  \
-            + A_coeff[3, x]/(2*3*4)*x**4
+P = A_int(1)
+    
+def A_doubleint(x):
+    idx = np.searchsorted(grid_x, x)-1
+    a = A_coeff[0, idx]
+    b = A_coeff[1, idx]
+    c = A_coeff[2, idx]
+    d = A_coeff[3, idx]  
+    return x**2*(a/(4*5)*(x-grid_x[idx])**3     \
+               + b/(3*4)*(x-grid_x[idx])**2     \
+               + c/(2*3)*(x-grid_x[idx])        \
+               + d/2)
 
-P = integrator(A_SC_int, grid_x)
-P1 = integrator(A_int, grid_x)
-P2 = integrator(A_doubleint, grid_x)
+def A_quadint(x):
+    idx = np.searchsorted(grid_x, x)-1
+    a = A_coeff[0, idx]
+    b = A_coeff[1, idx]
+    c = A_coeff[2, idx]
+    d = A_coeff[3, idx] 
+    return x**4*(a/(4*5*6*7)*(x-grid_x[idx])**3     \
+               + b/(3*4*5*6)*(x-grid_x[idx])**2     \
+               + c/(2*3*4*5)*(x-grid_x[idx])        \
+               + d/(2*3*4))
+
     
 #Reaction forces
     
@@ -139,6 +153,4 @@ def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - RI*math.cos(alpha)*(step(x, 
 
 #Twist 
 def theta(x): return (1/(G*J))*(doubleintegral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,1) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) +C5)
-
-print(Tx, My, Sz, Mz, Sy)
 
