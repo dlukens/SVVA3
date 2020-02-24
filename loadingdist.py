@@ -83,13 +83,13 @@ Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                       
        [0,0,0,0,0,0,0,0,0,x1**3,1,0],                                                                                                                        #w(x1)
        [(x2-x1)**3,0,0,0,0,0,-m.cos(alpha)*(xa/2)**3,0,0,x2**3,1,0],                                                                                         #w(x2)
        [(x3-x1)**3,0,(x3-x2)**3,0,0,0,0,0,0,x3**3,1,0],                                                                                                      #w(x3)
-       [-m.cos(alpha)*(xI-x1)**3/(E*Izz),-m.sin(alpha)*(xI-x1)**3/(E*Iyy) + SCz**2*(xI-x1)*m.sin(alpha)/(G*J),0,0,0,0,0,xI*m.sin(alpha)/(E*Iyy),m.sin(alpha)/(E*Iyy),-xI*cos(alpha)/(E*Izz),-m.cos(alpha)/(E*Izz),-SCz*m.sin(alpha)/(G*J)],                    #w'(xI)=0
+       [-m.cos(alpha)*(xI-x1)**3/(E*Izz),-m.sin(alpha)*(xI-x1)**3/(E*Iyy) + SCz**2*(xI-x1)*m.sin(alpha)/(G*J),0,0,0,0,0,xI*m.sin(alpha)/(E*Iyy),m.sin(alpha)/(E*Iyy),-xI*m.cos(alpha)/(E*Izz),-m.cos(alpha)/(E*Izz),-SCz*m.sin(alpha)/(G*J)],                    #w'(xI)=0
        [0,0,0,0,0,0,0,x1/(-E*Izz),1/(-E*Izz),0,0,SCz/(G*J)],                                                                                                                           #v(x1)+theta(x1)
        [0,-(x2-x1)**3/(-E*Izz)-SCz**2*(x2-x1)/(G*J),0,0,0,0,-m.sin(alpha)*(xa/2)**3/(-E*Izz) - SCz**2*m.sin(alpha)*(xa/2)/(G*J),x2/(-E*Izz),1/(-E*Izz),0,0,SCz],                                               #v(x2)+theta(x2)
        [0,-(x3-x1)**3/(-E*Izz)-SCz**2*(x3-x1)/(G*J),0,-(x3-x2)**3/(-E*Izz)-SCz**2*(x3-x2)/(G*J),0,0,-m.sin(alpha)*(x3-x2+0.5*xa)**3/(-E*Izz) - SCz**2*m.sin(alpha)*(x3-x2+xa*0.5)/(G*J),x3/(-E*Izz),1/(-E*Izz),0,0,SCz/(G*J)]]      #v(x3)+theta(x3)
     
 
-F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
+
 
 Bc= [[-SingleIntegralSC -SCz*P*m.sin(alpha)],               #T(la)
       [-P*m.cos(alpha)*(La-x2-0.5*xa)],                     #My(la)
@@ -100,10 +100,13 @@ Bc= [[-SingleIntegralSC -SCz*P*m.sin(alpha)],               #T(la)
       [0],                                                  #w(x2)
       [-d3*m.sin(alpha)*E*Iyy-P*m.cos(alpha)*(x3-x2-0.5*xa)**3],        #w(x3)
       [0],                                                          #w(xI)
-      [d1*m.cos(alpha)+(4thIntegral/(E*Izz))-(SCz*DoubleintegralSC/(G*J))], #vertical deflection at x1
-      [4thintegral/(E*Izz) -SCz*DoubleinegrealSC/(G*J)],
-      [d3*m.cos(alpha)+(4thIntegral/(E*Izz))-(SCz*DoubleintegralSC/(G*J)) +P*m.sin(alpha)*(x3-x2-0.5*xa)**3/(E*Izz) -SCz**2 *P*m.sin(alpha)*(x3-x2-0.5xa)/(G*J)]]
+      [d1*m.cos(alpha)+(A_quadint(x1)/(E*Izz))-(SCz*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
+      [A_quadint(x2)/(E*Izz) -SCz*A_SC_doubleint(x2)/(G*J)],
+      [d3*m.cos(alpha)+(A_quadint(x3)/(E*Izz))-(SCz*A_SC_doubleint(x3)/(G*J)) +P*m.sin(alpha)*(x3-x2-0.5*xa)**3/(E*Izz) -SCz**2 *P*m.sin(alpha)*(x3-x2-0.5*xa)/(G*J)]]
 
+
+
+#F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
 #Torque X-axis
 def Tx(x): return integral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,0) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
@@ -123,12 +126,11 @@ def Sz(x): return R1z*step(x, x1, 0) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 0)
 #Deflection in Y-axis
 def v(x): return (-1/(E*Izz))*(quadrupleintegrate(Ax, dx) - R1y*step(x, x1, 3) - RI*math.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*math.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) +C1*step(x,0, 1) + C2)
 
-<<<<<<< HEAD
 #Deflection in Z-axis
 def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*math.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3)+C3*step(x,0, 1) + C4)
 
 #Twist 
 def theta(x): return (1/(G*J))*(doubleintegral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,1) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) +C5)
-=======
+
 print(Tx, My, Sz, Mz, Sy)
 

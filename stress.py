@@ -42,6 +42,8 @@ for i in range(circpoints+1,Npoints):
     zpoints[i]=zpoints[i-1]-delta*m.cos(angle_Lssk)
     ypoints[i]=ypoints[i-1]-delta*m.sin(angle_Lssk)
     
+for i in range(Npoints+1, 2*Npoints)
+    
 
     
 
