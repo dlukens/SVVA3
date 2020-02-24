@@ -14,10 +14,8 @@ alpha = math.radians(25)
 
 def step(x, x1, exp): #Mcaulay step function
     y = x - x1
-    if y <= 0:
-        return 0 
-    else:
-        return y**exp
+    if y <= 0: return 0 
+    else: return y**exp
 
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
@@ -127,28 +125,27 @@ xI=x2-0.5*xa
 #       [4thintegral/(E*Izz) -SCz*DoubleinegrealSC/(G*J)],
 #       [d3*m.cos(alpha)+(4thIntegral/(E*Izz))-(SCz*DoubleintegralSC/(G*J)) +P*m.sin(alpha)*(x3-x2-0.5*xa)**3/(E*Izz) -SCz**2 *P*m.sin(alpha)*(x3-x2-0.5xa)/(G*J)]]
 
-
 #Torque X-axis
-def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
+def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*math.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
 
 #Moment in y-axis
-def My(x): return R1z*step(x, x1, 1) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*math.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
+def My(x): return R1z*step(x, x1, 1) - R1*math.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*math.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
 
 #Moment in X-axis                                  
-def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - RI*math.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*math.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
+def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - R1*math.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*math.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
 
 #Shear y-axis
 def Sy(x): return A_SC_int(x) - R1y*step(x, x1, 0) - R1*math.sin(alpha)*(x, x2 - xa/2, 0) - R2y*step(x, x2, 0) + P*math.sin(alpha)*step(x, x2 + xa/2, 0) - R3y*math.sin(alpha)*step(x, x3, 0)
 
 #Shear Z-Axis
-def Sz(x): return R1z*step(x, x1, 0) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*math.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x,x3, 0)
+def Sz(x): return R1z*step(x, x1, 0) - R1*math.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*math.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x, x3, 0)
 
 #Deflection in Y-axis
-def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - RI*math.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*math.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) +C1*step(x,0, 1) + C2)
+def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - R1*math.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*math.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) + C1*step(x,0, 1) + C2)
 
 
-def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - RI*math.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*math.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3)+C3*step(x,0, 1) + C4)
+def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*math.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*math.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
 
 #Twist 
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*RI*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) +C5)
+def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*math.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*math.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)
 
