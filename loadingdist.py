@@ -19,14 +19,14 @@ def step(x, x1, exp): #Mcaulay step function
         return y**exp
     
 def integrator(f, grid):
-    I = np.zeros(len(grid))
-    for i in range(len(grid)):
-        I[i] = abs(f(i)-f(i-1))
+    I = np.zeros(len(grid)-1)
+    for i in range(len(grid)-1):
+        I[i] = f(i)
     return I
         
 
 def A_SC_int(x, A_coeff = A_coeff, SCz = SCz, Cp_coeff = Cp_coeff):
-    return A_coeff[0, x]*SCz/4*x^4 + A_coeff[1, x]*SCz/3*x**3 + A_coeff[3, x]*SCz/2*x**2 +  A_coeff[4, x]*SCz*x**2 \
+    return A_coeff[0, x]*SCz/4*x**4 + A_coeff[1, x]*SCz/3*x**3 + A_coeff[2, x]*SCz/2*x**2 + A_coeff[3, x]*SCz*x**2 \
                         -  A_coeff[0, x]/7*x**7 \
                         - (A_coeff[0, x]*Cp_coeff[1, x] + A_coeff[1, x]*Cp_coeff[0, x])/6*x**6 \
                         - (A_coeff[0, x]*Cp_coeff[2, x] + A_coeff[1, x]*Cp_coeff[1, x] + A_coeff[2, x]*Cp_coeff[0, x])/5*x**5 \
@@ -34,11 +34,11 @@ def A_SC_int(x, A_coeff = A_coeff, SCz = SCz, Cp_coeff = Cp_coeff):
                         - (A_coeff[1, x]*Cp_coeff[3, x] + A_coeff[2, x]*Cp_coeff[2, x] + A_coeff[3, x]*Cp_coeff[1, x])/3*x**3 \
                         - (A_coeff[2, x]*Cp_coeff[3, x] + A_coeff[3, x]*Cp_coeff[2, x])/2*x**2 \
                         -  A_coeff[3, x]*Cp_coeff[3, x]*x
-         
-P = integrator(A_SC_int, grid_x)               
+                        
+
                         
 def A_SC_doubleint(x, A_coeff, SCz, Cp_coeff):
-    return A_coeff[0, x]*SCz/(4*5)*x**5 + A_coeff[1, x]*SCz/(3*4)*x**4 + A_coeff[3, x]*SCz/(2*3)*x**3 +  A_coeff[4, x]*SCz/(2)*x**2 \
+    return A_coeff[0, x]*SCz/(4*5)*x**5 + A_coeff[1, x]*SCz/(3*4)*x**4 + A_coeff[2, x]*SCz/(2*3)*x**3 + A_coeff[3, x]*SCz/(2)*x**2 \
                         -  A_coeff[0, x]/(8*7)*x**8 \
                         - (A_coeff[0, x]*Cp_coeff[1, x] + A_coeff[1, x]*Cp_coeff[0, x])/(6*7)*x**7 \
                         - (A_coeff[0, x]*Cp_coeff[2, x] + A_coeff[1, x]*Cp_coeff[1, x] + A_coeff[2, x]*Cp_coeff[0, x])/(5*6)*x**6 \
@@ -48,26 +48,28 @@ def A_SC_doubleint(x, A_coeff, SCz, Cp_coeff):
                         - A_coeff[3, x]*Cp_coeff[3, x]/2*x**2
     
     
-def A_int(x, A_coeff):
+def A_int(x, A_coeff=A_coeff):
     return A_coeff[0, x]/4*x**4         \
             + A_coeff[1, x]/3*x**3      \
             + A_coeff[2, x]/2*x**2      \
             + A_coeff[3, x]*x**1
             
     
-def A_doubleint(x, A_coeff):
+def A_doubleint(x, A_coeff=A_coeff):
     return A_coeff[0, x]/(4*5)*x**5     \
             + A_coeff[1, x]/(3*4)*x**4  \
             + A_coeff[2, x]/(2*3)*x**3  \
             + A_coeff[3, x]/2*x**2 
 
-def A_quadint(x, A_coeff):
+def A_quadint(x, A_coeff=A_coeff):
     return A_coeff[0, x]/(4*5*6*7)*x**7     \
             + A_coeff[1, x]/(3*4*5*6)*x**6  \
             + A_coeff[2, x]/(2*3*4*5)*x**5  \
             + A_coeff[3, x]/(2*3*4)*x**4
 
-    
+P = integrator(A_SC_int, grid_x)
+P1 = integrator(A_int, grid_x)
+P2 = integrator(A_doubleint, grid_x)
     
 ###Reaction forces
     
