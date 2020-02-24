@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
-from sectionproperties import SCz, x2, xa
+from sectionproperties import SCz, x1, x2, x3, xa, R1x, R1y, R2, R2x, R2y, R3, R3x, R3y, P
 import numpy as np
-import forces
 from forces import A_coeff, Cp_coeff
 from interp import grid_x, grid_z
 
@@ -35,7 +34,6 @@ def A_SC_int(x):
                         - (b*h + c*g + d*f)/3*(x-grid_x[idx])**2                   \
                         - (c*h + d*g)/2*(x-grid_x[idx])                            \
                         -  d*h)
-                        
 
                         
 def A_SC_doubleint(x):

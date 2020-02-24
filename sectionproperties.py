@@ -1,13 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 18 23:10:17 2020
-
-@author: frederik
-"""
-
 import math as m
-import matplotlib.pyplot as plt
 import numpy as np
 
 #### section properties ####
@@ -30,7 +21,7 @@ delta_y1 = 1.034 #vertical displacement of hinge 1 [cm]
 delta_y3 = 2.066 #vertical displacement of hinge 3 [cm]
 theta = 25      #maximum upward deflection [deg]
 P = 20.6        #maximum load in actuator 2 [kN]
-E=73.1 *10**9   #Young's modulus [Pa]
+E = 73.1 *10**9   #Young's modulus [Pa]
 
 #calculate z_coordinates stiffeners
 Lssk = m.sqrt(0.5*0.5*h*h + (Ca - 0.5*h)*(Ca - 0.5*h)) #length of straight skin (one half)
@@ -71,7 +62,6 @@ A_tot = Lsk*Tsk + 11*Ast + Tsp*h                                         #total 
 
 Cz = (2*Ast*(z_st1+z_st2+z_st3+z_st4+z_st5) + Tsp*h*z_bar_spar  + 2*z_bar_Lssk*Lssk*Tsk + z_bar_arc*0.5*m.pi*h*Tsk)/A_tot #aileron centroid [m]
 
-print(Cz)
 
 z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
@@ -90,7 +80,6 @@ for i in y :
     Izz += steiner
 
 Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
-print(Izz)
 
 Iyy_ss = (1/12)*Tsk*Lssk**3*(m.cos(angle_Lssk))**2
 Ad_yss = Lssk*Tsk*(Ca+Cz-0.5*Lssk*m.cos(angle_Lssk))**2
@@ -107,7 +96,6 @@ for i in z[1:] :
     Iyy += steiner
     
 Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc +Ad_yarc # [m^4]
-print(Iyy)
 
 # Shear Center
 
@@ -133,7 +121,6 @@ Mi = h/2*(m.pi*h*qs0_1/2 - Sy*h**3*Tsk/(4*Izz)) + d*(2*qs0_2*Lssk - Sy*h*Lssk**2
 
 Ksi = -Mi/Sy # distance midpoint spar - shear center (positive)
 SCz = -h/2 - Ksi # shear center [m]
-print(SCz)
 
 # Torsional Stiffness
 
@@ -162,8 +149,3 @@ Q = np.linalg.solve(X, b)
 dtheta_dz = Q[2,0] # rate of twist [rad/m]
 
 J = T/(G*dtheta_dz) # torsional stiffness [m^4]
-print(J)
-
-
-
-
