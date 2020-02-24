@@ -109,4 +109,4 @@ def Mz(x): return doubleintegrate(Ax, dx) - R1y*step(x, x1, 1) - RI*math.sin(alp
 #Shear y-axis
 def Sy(x): return integrate(Ax, dx) - R1y*step(x, x1, 0) - R1*math.sin(alpha)*(x, x2 + xa/2, 0) + R2y*step(x, x2, 0) + P*math.sin(alpha)*step(x, x2-xa/2, 0) - R3y*math.sin(alpha)*step(x, x3, 0)
 
-
+print(Tx, My, Sz, Mz, Sy)
