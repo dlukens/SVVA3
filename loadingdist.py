@@ -2,6 +2,7 @@
 import math
 import tools as t
 from sectionproperties import *
+from forces import integrate, polyintegrate
 
 ###variables
 alpha = math.radians(25)
@@ -15,8 +16,9 @@ def step(x, x1, exp): #Mcaulay step function
     else:
         return y**exp
     
-def A(x):
+def Ax(x):
     pass
+
     
     
 ###Reaction forces
@@ -41,20 +43,20 @@ Bc= []
 
 
 #Torque X-axis
-Tx = integral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,0) - SCz*RI*math.sin(alpha)*step(x, x2+xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*math.sin(alpha)*(x, x2 - xa/2, 0) - SCz*R3y*step(x, x3, 0)
+def Tx(x): return integral(Ax*(SCz - Cp_x), dx) - SCz*R1y*step(x,x1,0) - SCz*RI*math.sin(alpha)*step(x, x2+xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*math.sin(alpha)*(x, x2 - xa/2, 0) - SCz*R3y*step(x, x3, 0)
 
 
 #Moment in y-axis
-My = R1z*step(x, x1, 1) - RI*math.cos(alpha)*(step(x, x2 + xa/2, 1)) + R2z*step(x, x2, 1) + P*math.cos(alpha)*step(x, x2 - xa/2, 1) + R3z*step(x,x3, 1)
+def My(x): return R1z*step(x, x1, 1) - RI*math.cos(alpha)*(step(x, x2 + xa/2, 1)) + R2z*step(x, x2, 1) + P*math.cos(alpha)*step(x, x2 - xa/2, 1) + R3z*step(x,x3, 1)
 
 #Shear Z-Axis
-Sz = R1z*step(x, x1, 0) - RI*math.cos(alpha)*(step(x, x2 + xa/2, 0)) + R2z*step(x, x2, 0) + P*math.cos(alpha)*step(x, x2 - xa/2, 0) + R3z*step(x,x3, 0)
+def Sz(x): return R1z*step(x, x1, 0) - RI*math.cos(alpha)*(step(x, x2 + xa/2, 0)) + R2z*step(x, x2, 0) + P*math.cos(alpha)*step(x, x2 - xa/2, 0) + R3z*step(x,x3, 0)
 
 
 #Moment in X-axis                                  
-Mz = doubleintegrate(Ax, dx) - R1y*step(x, x1, 1) - RI*math.sin(alpha)*(x, x2 + xa/2, 1) - R2y*step(x, x2, 1) + P*math.sin(alpha)*step(x, x2-xa/2, 1) - R3y*step(x, x3, 1)
+def Mz(x): return doubleintegrate(Ax, dx) - R1y*step(x, x1, 1) - RI*math.sin(alpha)*(x, x2 + xa/2, 1) - R2y*step(x, x2, 1) + P*math.sin(alpha)*step(x, x2-xa/2, 1) - R3y*step(x, x3, 1)
 
 #Shear y-axis
-Sy = integrate(Ax, dx) - R1y*step(x, x1, 0) - R1*math.sin(alpha)*(x, x2 + xa/2, 0) + R2y*step(x, x2, 0) + P*math.sin(alpha)*step(x, x2-xa/2, 0) - R3y*math.sin(alpha)*step(x, x3, 0)
+def Sy(x): return integrate(Ax, dx) - R1y*step(x, x1, 0) - R1*math.sin(alpha)*(x, x2 + xa/2, 0) + R2y*step(x, x2, 0) + P*math.sin(alpha)*step(x, x2-xa/2, 0) - R3y*math.sin(alpha)*step(x, x3, 0)
 
 
