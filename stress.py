@@ -5,7 +5,7 @@ Created on Mon Feb 17 15:06:53 2020
 @author: sarta
 """
 import math as m
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from sectionproperties import *
 import numpy as np
 
@@ -17,8 +17,8 @@ import numpy as np
 
 
 
-Npoints=100                     #Number of points on half of Aileron cross section
-delta= Lsk/(2*(Npoints-1))      #difference between successive points
+Npoints=100                    #Number of points on half of Aileron cross section
+delta= Lsk/(2*(Npoints))      #difference between successive points
 circfrac= 0.5*m.pi*h/Lsk        #fraction of total skin lenght that comes from arc
 circpoint=circfrac*Npoints      #Number of points on the arc
 deltacirc=m.pi/(2*circpoint)    #
@@ -53,14 +53,21 @@ endnode=2.01
 nodesnumber=100
 deltax=(endnode-beginnode)/(nodesnumber-1)
 
-bendingstress=np.zeros(nodesnumber,2*Npoints-1)
+bstress=np.zeros((nodesnumber,2*Npoints-1))
 
-for i in range(nodesnumber):
-    x=beginnode+deltax*i
-    for j in range(2*Npoints-1):
-        sigma = My(x)*z/Iyy + Mz(x)*y/Izz
-        bendingstress(i,j)=sigma
+#for i in range(nodesnumber):
+ #   x=beginnode+deltax*i
+  #  for j in range(2*Npoints-1):
+   #     bstress(i,j) = My(x)*z/Iyy + Mz(x)*y/Izz
         
+striz=[z_st0,z_st1,z_st2,z_st3,z_st4,z_st5,z_st5,z_st4,z_st3,z_st2,z_st1,z_st0]
+striy=[y_st0,y_st1,y_st2,y_st3,y_st4,y_st5,-y_st5,-y_st4,-y_st3,-y_st2,-y_st1,y_st0]
+
+plt.scatter(zpoints,ypoints)
+plt.scatter(striz,striy)
+plt.show
+
+
         
 
 
