@@ -1,13 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 18 23:10:17 2020
-
-@author: frederik
-"""
-
 import math as m
-import matplotlib.pyplot as plt
 import numpy as np
 
 #### section properties ####
@@ -27,10 +18,11 @@ Hst = 0.015    #stiffener height [m]
 Wst = 0.030      #stiffener width [m]
 Nst = 11      #number of stiffeners
 d1 = 0.01034 #vertical displacement of hinge 1 [m]
+d2 = 0 #[m]
 d3 = 0.02066 #vertical displacement of hinge 3 [m]
 theta = 25      #maximum upward deflection [deg]
 P = 20600        #maximum load in actuator 2 [N]
-E = 73.1 *10**9
+E = 73.1 *10**9 #[Pa]
 
 #calculate z_coordinates stiffeners
 Lssk = m.sqrt(0.5*0.5*h*h + (Ca - 0.5*h)*(Ca - 0.5*h)) #length of straight skin (one half)
@@ -58,7 +50,7 @@ y_st3 = y_st0 + m.sin(angle_Lssk)*(Lssk - delta_str - abs(0.25*m.pi*h - 2*delta_
 y_st4 = y_st0 + m.sin(angle_Lssk)*(Lssk - 2*delta_str - abs(0.25*m.pi*h - 2*delta_str))
 y_st5 = y_st0 + m.sin(angle_Lssk)*(Lssk - 3*delta_str - abs(0.25*m.pi*h - 2*delta_str))
 
-Ast = Hst * Tst + Wst * Tst                     #stiffener area [mm^2]
+Ast = Hst * Tst + Wst * Tst                     #stiffener area [m^2]
 
 Cy = 0 # y_coordinate of centroid of cross section [m]
 

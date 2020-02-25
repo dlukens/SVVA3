@@ -16,7 +16,6 @@ def step(x, x1, exp): #Mcaulay step function
     if y <= 0: return 0 
     else: return y**exp
 
-        
 
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
@@ -161,28 +160,28 @@ Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],               #T(la)
 
 F = np.linalg.solve(Rxn, Bc)
 
-#F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
+# #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
-#Torque X-axis
-def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
+# #Torque X-axis
+# def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
 
-#Moment in y-axis
-def My(x): return R1z*step(x, x1, 1) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*m.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
+# #Moment in y-axis
+# def My(x): return R1z*step(x, x1, 1) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*m.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
 
-#Moment in X-axis                                  
-def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - R1*m.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*m.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
+# #Moment in X-axis                                  
+# def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - R1*m.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*m.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
 
-#Shear y-axis
-def Sy(x): return A_SC_int(x) - R1y*step(x, x1, 0) - R1*m.sin(alpha)*(x, x2 - xa/2, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, x2 + xa/2, 0) - R3y*m.sin(alpha)*step(x, x3, 0)
+# #Shear y-axis
+# def Sy(x): return A_SC_int(x) - R1y*step(x, x1, 0) - R1*m.sin(alpha)*(x, x2 - xa/2, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, x2 + xa/2, 0) - R3y*m.sin(alpha)*step(x, x3, 0)
 
-#Shear Z-Axis
-def Sz(x): return R1z*step(x, x1, 0) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*m.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x, x3, 0)
+# #Shear Z-Axis
+# def Sz(x): return R1z*step(x, x1, 0) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*m.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x, x3, 0)
 
-#Deflection in Y-axis
-def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - R1*m.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) + C1*step(x,0, 1) + C2)
+# #Deflection in Y-axis
+# def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - R1*m.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) + C1*step(x,0, 1) + C2)
 
-#Deflection in Z-axis
-def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
+# #Deflection in Z-axis
+# def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
 
-#Twist 
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)
+# #Twist 
+# def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)

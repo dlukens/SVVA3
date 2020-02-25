@@ -69,7 +69,7 @@ def interpolate(force, grid):
         v = np.zeros(n+1)
 
         for k in range(0,n-1):
-            v[k+1] = 3*((d[k+2]-d[k+1])/h[k+1] - (d[k+1]-d[k])/h[k])
+            v[k+1] = 1/2*((d[k+2]-d[k+1])/h[k+1] - (d[k+1]-d[k])/h[k])
 
         #solve A*b = v
         #b are the values M(0) --> M(n)
@@ -129,7 +129,7 @@ def interpolate1d(force, grid):
     v = np.zeros(n+1)
 
     for k in range(0,n-1):
-        v[k+1] = 3*((d[k+2]-d[k+1])/h[k+1] - (d[k+1]-d[k])/h[k])
+        v[k+1] = 1/2*((d[k+2]-d[k+1])/h[k+1] - (d[k+1]-d[k])/h[k])
 
     #solve A*b = v
     #b are the values M(0) --> M(n)

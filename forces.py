@@ -32,7 +32,7 @@ def integrate(C0, grid):
             def f(z):
                 return 1/4*C0[i,0,j]*(z - grid[j])**4 + 1/3*C0[i,1,j]*(z - grid[j])**3 + 1/2*C0[i,2,j]*(z - grid[j])**2 + C0[i,3,j]*z
             
-            I[i, fj+1] = I[i, j] + f(grid[j+1]) - f(grid[j])
+            I[i, j+1] = I[i, j] + f(grid[j+1]) - f(grid[j])
             
     I_sum = I.sum(axis=1)
 
