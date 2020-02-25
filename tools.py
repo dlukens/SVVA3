@@ -27,6 +27,7 @@ def integral(f, lower_bound, upper_bound, n=60):
     R = ((3*step_size)/8)* som
     return (R)
 
+integral(f, 1, 2, 50)
 
 def f2(x,y):
     return x*y + 2*x + 3*y

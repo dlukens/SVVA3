@@ -18,7 +18,7 @@ La = 2.691      #aileron span [m]
 x1 = 0.174       #x-coordinate hinge 1 [m]
 x2 = 1.051       #x-coordinate hinge 2 [m]
 x3 = 2.512       #x-coordinate hinge 3 [m]
-xA = 0.3       #spacing between actuator I & II [m]
+xa = 0.3       #spacing between actuator I & II [m]
 h = 0.248      #aileron profile thickness (height) [m]
 Tsp = 0.0022   #spar thickness [m]
 Tst = 0.0012   #stiffener thickness [m]
@@ -26,10 +26,11 @@ Tsk = 0.0011   #skin thickness [m]
 Hst = 0.015    #stiffener height [m]
 Wst = 0.030      #stiffener width [m]
 Nst = 11      #number of stiffeners
-delta_y1 = 1.034 #vertical displacement of hinge 1 [cm]
-delta_y3 = 2.066 #vertical displacement of hinge 3 [cm]
+d1 = 0.01034 #vertical displacement of hinge 1 [m]
+d3 = 0.02066 #vertical displacement of hinge 3 [m]
 theta = 25      #maximum upward deflection [deg]
-P = 20.6        #maximum load in actuator 2 [kN]
+P = 20600        #maximum load in actuator 2 [N]
+E = 73.1 *10**9
 
 #calculate z_coordinates stiffeners
 Lssk = m.sqrt(0.5*0.5*h*h + (Ca - 0.5*h)*(Ca - 0.5*h)) #length of straight skin (one half)

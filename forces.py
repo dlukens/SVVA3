@@ -32,7 +32,7 @@ def integrate(C0, grid):
             def f(z):
                 return 1/4*C0[i,0,j]*(z - grid[j])**4 + 1/3*C0[i,1,j]*(z - grid[j])**3 + 1/2*C0[i,2,j]*(z - grid[j])**2 + C0[i,3,j]*z
             
-            I[i, j+1] = I[i, j] + abs(f(grid[j+1]) - f(grid[j]))
+            I[i, fj+1] = I[i, j] + f(grid[j+1]) - f(grid[j])
             
     I_sum = I.sum(axis=1)
 
@@ -48,13 +48,13 @@ def integrate2(C1, grid):
             def f(z):
                 return 1/5*C1[i,0,j]*(z - grid[j])**5 + 1/4*C1[i,1,j]*(z - grid[j])**4 + 1/3*C1[i,2,j]*(z - grid[j])**3 + 1/2*C1[i,3,j]*z**2
             
-            I[i, j+1] = I[i, j] + abs(f(grid[j+1]) - f(grid[j]))
+            I[i, j+1] = I[i, j] + f(grid[j+1]) - f(grid[j])
             
     I_sum = I.sum(axis=1)
 
     return I, I_sum
 
-I_z, I_zsum = integrate(C0_z, grid_z)
+I_z, I_zsum = integrate(C0_z, -grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
 
 A_coeff = interp.interpolate1d(I_zsum, grid_x)    
