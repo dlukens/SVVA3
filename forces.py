@@ -54,7 +54,7 @@ def integrate2(C1, grid):
 
     return I, I_sum
 
-I_z, I_zsum = integrate(C0_z, -grid_z)
+I_z, I_zsum = integrate(C0_z, grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
 
 A_coeff = interp.interpolate1d(I_zsum, grid_x)    
@@ -78,29 +78,27 @@ Cp_coeff = interp.interpolate1d(Cp_x, grid_x)
 
 
 ###Plotting###
-# def plot2d(gridx, gridz, data, title):
-#     #2D contour plot
+def plot2d(gridx, gridz, data, title):
+    #2D contour plot
     
-#     X, Z = np.meshgrid(gridx, gridz)
-#     Y = data
+    X, Z = np.meshgrid(gridx, gridz)
+    Y = data
     
-#     plt.figure()
-#     cp = plt.contourf(X, Z, Y)
-#     plt.colorbar(cp)
+    plt.figure()
+    cp = plt.contourf(X, Z, Y)
+    plt.colorbar(cp)
     
-#     plt.title('{}'.format(title))
-#     plt.xlabel('X along wingspan [m]')
-#     plt.ylabel('Z along chord [m]')
-#     plt.plot(grid_x[:-1], Cp_x)
-#     plt.show()
+    plt.title('{}'.format(title))
+    plt.xlabel('X along wingspan [m]')
+    plt.ylabel('Z along chord [m]')
+    plt.plot(grid_x, Cp_x)
+    plt.show()
     
 
 # plot2d(grid_x, grid_z, data, 'Distributed force q')
-# plot2d(grid_x[:-1], grid_z[:-1], I_x, 'First integral')
-# plot2d(grid_x[:-2], grid_z[:-2], II_x, 'Second Integral')
+# plot2d(grid_x, grid_z, I_x, 'First integral')
+# plot2d(grid_x, grid_z, II_x, 'Second Integral')
 
 # plot2d(grid_x, grid_z, data, 'Distributed force q')
-# plot2d(grid_z[:-1], grid_x[:-1], I_z, 'First integral')
-# plot2d(grid_z[:-2], grid_x[:-2], II_z, 'Second Integral')
-
-
+# plot2d(grid_x, grid_z, I_z.T, 'First integral')
+# plot2d(grid_x, grid_z, II_z.T, 'Second Integral')

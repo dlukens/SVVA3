@@ -23,7 +23,7 @@ nst = 11  # -
 d1 = 0.01034  # m
 d3 = 0.02066  # m
 theta = m.radians(25)  # rad
-P = 20.6*1000  # N
+P = -20.6*1000  # N
 
 ######################## Part II - bending stiffness calculations #######################################
 ### Create the cross-section object
