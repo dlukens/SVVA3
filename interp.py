@@ -86,7 +86,7 @@ def interpolate(force, grid):
 
         #Now 3D array with all C0icients for each section and each chord
             #Index 0: Spanwise chord section - along X-axis
-            #Index 1: C0icient value (a, b, c, d)
+            #Index 1: Coefficient value (a, b, c, d)
             #Index 2: Chordwise interval - along -Z-Axis
 
         C0[r, 0, :] = a
@@ -146,7 +146,7 @@ def interpolate1d(force, grid):
 
     #Now 3D array with all C0icients for each section and each chord
         #Index 0: Spanwise chord section - along X-axis
-        #Index 1: C0icient value (a, b, c, d)
+        #Index 1: Coefficient value (a, b, c, d)
         #Index 2: Chordwise interval - along -Z-Axis
 
     C0[0, :] = a
