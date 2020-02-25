@@ -12,7 +12,7 @@ def f(x):
     return 1 / x
                     
 
-def integral(f, lower_bound, upper_bound, n=60):
+def integral(f, lower_bound, upper_bound, n=120):
     # f = function
     # n = number of sub-intervals, must be multiple of 3
     if n % 3 >=1:
@@ -27,7 +27,6 @@ def integral(f, lower_bound, upper_bound, n=60):
     R = ((3*step_size)/8)* som
     return (R)
 
-integral(f, 1, 2, 50)
 
 def f2(x,y):
     return x*y + 2*x + 3*y
