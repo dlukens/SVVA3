@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import math as m
-from sectionproperties import SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La
+from sectionproperties import SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
 import numpy as np
 from forces import A_coeff, Cp_coeff
 from interp import grid_x
@@ -20,8 +20,12 @@ def step(x, x1, exp): #Mcaulay step function
 
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x >= grid_x[-1]: idx = len(grid_x)-2
-    if x < grid_x[0]: idx = 0
+    if x > grid_x[-1]:  #edge cases
+        idx = len(grid_x)-2 
+        x = grid_x[-1]
+    if x < grid_x[0]: 
+        idx = 0
+        x = grid_x[0]
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -43,8 +47,12 @@ def A_SC_int(x):
                         
 def A_SC_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x >= grid_x[-1]: idx = len(grid_x)-2
-    if x < grid_x[0]: idx = 0
+    if x > grid_x[-1]: #edge cases
+        idx = len(grid_x)-2 
+        x = grid_x[-1]
+    if x < grid_x[0]: 
+        idx = 0
+        x = grid_x[0]
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -65,8 +73,12 @@ def A_SC_doubleint(x):
     
 def A_int(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x >= grid_x[-1]: idx = len(grid_x)-2
-    if x < grid_x[0]: idx = 0
+    if x > grid_x[-1]:  #edge cases
+        idx = len(grid_x)-2 
+        x = grid_x[-1]
+    if x < grid_x[0]: 
+        idx = 0
+        x = grid_x[0]
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -76,11 +88,16 @@ def A_int(x):
             + c/2*(x-grid_x[idx])         \
             + d)
 
+S = A_int(4)
     
 def A_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x >= grid_x[-1]: idx = len(grid_x)-2
-    if x < grid_x[0]: idx = 0
+    if x > grid_x[-1]:  #edge cases
+        idx = len(grid_x)-2 
+        x = grid_x[-1]
+    if x < grid_x[0]: 
+        idx = 0
+        x = grid_x[0]
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -92,8 +109,12 @@ def A_doubleint(x):
 
 def A_quadint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x >= grid_x[-1]: idx = len(grid_x)-2
-    if x < grid_x[0]: idx = 0
+    if x > grid_x[-1]:  #edge cases
+        idx = len(grid_x)-2 
+        x = grid_x[-1]
+    if x < grid_x[0]: 
+        idx = 0
+        x = grid_x[0]
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
@@ -138,6 +159,7 @@ Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],               #T(la)
        [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (SCz*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - SCz**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
 
 
+F = np.linalg.solve(Rxn, Bc)
 
 #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
