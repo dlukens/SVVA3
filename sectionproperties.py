@@ -21,7 +21,7 @@ d1 = 0.01034 #vertical displacement of hinge 1 [m]
 d2 = 0 #[m]
 d3 = 0.02066 #vertical displacement of hinge 3 [m]
 theta = 25      #maximum upward deflection [deg]
-P = -20600        #maximum load in actuator 2 [N]
+P = 20600        #maximum load in actuator 2 [N]
 E = 73.1 *10**9 #[Pa]
 
 #calculate z_coordinates stiffeners
