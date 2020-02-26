@@ -12,7 +12,7 @@ def f(x):
     return 1 / x
                     
 
-def integral(f, lower_bound, upper_bound, n=60):
+def integral(f, lower_bound, upper_bound, n=120):
     # f = function
     # n = number of sub-intervals, must be multiple of 3
     if n % 3 >=1:

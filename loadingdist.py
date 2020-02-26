@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import math as m
-from sectionproperties import SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
+from sectionproperties import h, SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
 import numpy as np
 from forces import A_coeff, Cp_coeff
 from interp import grid_x
 
 
 ###variables
-alpha = m.radians(25)
+alpha = m.radians(25) # angle of attack
+eta = SCz + h/2       # distance midpoint spar - shear center
 
 ###Funcions
 
@@ -16,7 +17,6 @@ def step(x, x1, exp): #Mcaulay step function
     if y <= 0: return 0 
     else: return y**exp
 
-        
 
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
@@ -134,7 +134,7 @@ Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                       
         [0,-(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-x2+xa*0.5),0,0,0,0,0],                                                                              #Mz(la)
         [1,0,1,0,1,0,-m.cos(alpha),0,0,0,0,0],                                                                                                                #Sz(la)
         [0,-1,0,-1,0,-1,-m.sin(alpha),0,0,0,0,0],                                                                                                             #Sy(la)
-        [0,0,0,0,0,0,0,0,0,x1**3,1,0],                                                                                                                        #w(x1)
+        [0,0,0,0,0,0,0,0,0,x1,1,0],                                                                                                                        #w(x1)
         [(x2-x1)**3,0,0,0,0,0,-m.cos(alpha)*(xa/2)**3,0,0,x2**3,1,0],                                                                                         #w(x2)
         [(x3-x1)**3,0,(x3-x2)**3,0,0,0,0,0,0,x3**3,1,0],                                                                                                      #w(x3)
         [-m.cos(alpha)*(xI-x1)**3/(E*Izz),-m.sin(alpha)*(xI-x1)**3/(E*Iyy) + SCz**2*(xI-x1)*m.sin(alpha)/(G*J),0,0,0,0,0,xI*m.sin(alpha)/(E*Iyy),m.sin(alpha)/(E*Iyy),-xI*m.cos(alpha)/(E*Izz),-m.cos(alpha)/(E*Izz),-SCz*m.sin(alpha)/(G*J)],                    #w'(xI)=0
@@ -144,16 +144,15 @@ Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                       
   
 
 
-
-Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],               #T(la)
-       [-P*m.cos(alpha)*(La - x2 - 0.5*xa)],                     #My(la)
-       [-A_SC_doubleint(La) - P*m.sin(alpha)*(La-x2-0.5*xa)],    #Mz(la)
-       [-P*m.cos(alpha)],                                    #Sz(la)
-       [-A_int(La) - P*m.sin(alpha)],                   #Sy(la)
-       [-d1*m.sin(alpha)*E*Iyy],                             #w(x1)
-       [0],                                                  #w(x2)
-       [-d3*m.sin(alpha)*E*Iyy - P*m.cos(alpha)*(x3 - x2 - 0.5*xa)**3],        #w(x3)
-       [0],                                                          #w(xI)
+Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],                              #T(la) 
+       [P*m.cos(alpha)*(La - x2 - 0.5*xa)],                             #My(la)
+       [A_SC_doubleint(La) + P*m.sin(alpha)*(La-x2 - 0.5*xa)],          #Mz(la)
+       [P*m.cos(alpha)],                                                #Sz(la)
+       [A_int(La) + P*m.sin(alpha)],                                    #Sy(la)
+       [d1*m.sin(alpha)],                                               #w(x1)
+       [0],                                                             #w(x2)
+       [-d3*m.sin(alpha)*E*Iyy - P*m.cos(alpha)*(x3 - x2 - 0.5*xa)**3], #w(x3)
+       [0],                                                             #w(xI)
        [d1*m.cos(alpha) + (A_quadint(x1)/(E*Izz)) - (SCz*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
        [A_quadint(x2)/(E*Izz) - SCz*A_SC_doubleint(x2)/(G*J)],
        [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (SCz*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - SCz**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
@@ -161,28 +160,28 @@ Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],               #T(la)
 
 F = np.linalg.solve(Rxn, Bc)
 
-#F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
+# #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
-#Torque X-axis
-def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
+# #Torque X-axis
+# def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
 
-#Moment in y-axis
-def My(x): return R1z*step(x, x1, 1) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*m.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
+# #Moment in y-axis
+# def My(x): return R1z*step(x, x1, 1) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*m.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
 
-#Moment in X-axis                                  
-def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - R1*m.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*m.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
+# #Moment in X-axis                                  
+# def Mz(x): return A_SC_doubleint(x) - R1y*step(x, x1, 1) - R1*m.sin(alpha)*(x, x2 - xa/2, 1) - R2y*step(x, x2, 1) + P*m.sin(alpha)*step(x, x2+xa/2, 1) - R3y*step(x, x3, 1)
 
-#Shear y-axis
-def Sy(x): return A_SC_int(x) - R1y*step(x, x1, 0) - R1*m.sin(alpha)*(x, x2 - xa/2, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, x2 + xa/2, 0) - R3y*m.sin(alpha)*step(x, x3, 0)
+# #Shear y-axis
+# def Sy(x): return A_SC_int(x) - R1y*step(x, x1, 0) - R1*m.sin(alpha)*(x, x2 - xa/2, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, x2 + xa/2, 0) - R3y*m.sin(alpha)*step(x, x3, 0)
 
-#Shear Z-Axis
-def Sz(x): return R1z*step(x, x1, 0) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*m.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x, x3, 0)
+# #Shear Z-Axis
+# def Sz(x): return R1z*step(x, x1, 0) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 0)) + R2z*step(x, x2, 0) + P*m.cos(alpha)*step(x, x2 + xa/2, 0) + R3z*step(x, x3, 0)
 
-#Deflection in Y-axis
-def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - R1*m.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) + C1*step(x,0, 1) + C2)
+# #Deflection in Y-axis
+# def v(x): return (-1/(E*Izz))*(A_quadint(x) - R1y*step(x, x1, 3) - R1*m.sin(alpha)*(x, x2 - xa/2, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, x2+xa/2, 3) - R3y*step(x, x3, 3) + C1*step(x,0, 1) + C2)
 
-#Deflection in Z-axis
-def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
+# #Deflection in Z-axis
+# def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
 
-#Twist 
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)
+# #Twist 
+# def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)
