@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import math as m
-from sectionproperties import SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
+from sectionproperties import h, SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
 import numpy as np
 from forces import A_coeff, Cp_coeff
 from interp import grid_x
 
 
 ###variables
-alpha = m.radians(25)
+alpha = m.radians(25) # angle of attack
+eta = SCz + h/2       # distance midpoint spar - shear center
 
 ###Funcions
 
@@ -133,7 +134,7 @@ Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                       
         [0,-(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-x2+xa*0.5),0,0,0,0,0],                                                                              #Mz(la)
         [1,0,1,0,1,0,-m.cos(alpha),0,0,0,0,0],                                                                                                                #Sz(la)
         [0,-1,0,-1,0,-1,-m.sin(alpha),0,0,0,0,0],                                                                                                             #Sy(la)
-        [0,0,0,0,0,0,0,0,0,x1**3,1,0],                                                                                                                        #w(x1)
+        [0,0,0,0,0,0,0,0,0,x1,1,0],                                                                                                                        #w(x1)
         [(x2-x1)**3,0,0,0,0,0,-m.cos(alpha)*(xa/2)**3,0,0,x2**3,1,0],                                                                                         #w(x2)
         [(x3-x1)**3,0,(x3-x2)**3,0,0,0,0,0,0,x3**3,1,0],                                                                                                      #w(x3)
         [-m.cos(alpha)*(xI-x1)**3/(E*Izz),-m.sin(alpha)*(xI-x1)**3/(E*Iyy) + SCz**2*(xI-x1)*m.sin(alpha)/(G*J),0,0,0,0,0,xI*m.sin(alpha)/(E*Iyy),m.sin(alpha)/(E*Iyy),-xI*m.cos(alpha)/(E*Izz),-m.cos(alpha)/(E*Izz),-SCz*m.sin(alpha)/(G*J)],                    #w'(xI)=0
@@ -143,16 +144,15 @@ Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                       
   
 
 
-
-Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],               #T(la)
-       [-P*m.cos(alpha)*(La - x2 - 0.5*xa)],                     #My(la)
-       [-A_SC_doubleint(La) - P*m.sin(alpha)*(La-x2-0.5*xa)],    #Mz(la)
-       [-P*m.cos(alpha)],                                    #Sz(la)
-       [-A_int(La) - P*m.sin(alpha)],                   #Sy(la)
-       [-d1*m.sin(alpha)*E*Iyy],                             #w(x1)
-       [0],                                                  #w(x2)
-       [-d3*m.sin(alpha)*E*Iyy - P*m.cos(alpha)*(x3 - x2 - 0.5*xa)**3],        #w(x3)
-       [0],                                                          #w(xI)
+Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],                              #T(la) 
+       [P*m.cos(alpha)*(La - x2 - 0.5*xa)],                             #My(la)
+       [A_SC_doubleint(La) + P*m.sin(alpha)*(La-x2 - 0.5*xa)],          #Mz(la)
+       [P*m.cos(alpha)],                                                #Sz(la)
+       [A_int(La) + P*m.sin(alpha)],                                    #Sy(la)
+       [d1*m.sin(alpha)],                                               #w(x1)
+       [0],                                                             #w(x2)
+       [-d3*m.sin(alpha)*E*Iyy - P*m.cos(alpha)*(x3 - x2 - 0.5*xa)**3], #w(x3)
+       [0],                                                             #w(xI)
        [d1*m.cos(alpha) + (A_quadint(x1)/(E*Izz)) - (SCz*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
        [A_quadint(x2)/(E*Izz) - SCz*A_SC_doubleint(x2)/(G*J)],
        [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (SCz*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - SCz**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
