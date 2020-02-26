@@ -3,7 +3,9 @@ import math as m
 from sectionproperties import h, SCz, x1, x2, x3, xa, P, G, J, E, Izz, Iyy, La, d1, d3
 import numpy as np
 from forces import A_coeff, Cp_coeff
+import interp
 from interp import grid_x
+import tools as t
 
 
 ###variables
@@ -16,8 +18,9 @@ def step(x, x1, exp): #Mcaulay step function
     y = x - x1
     if y <= 0: return 0 
     else: return y**exp
+    
 
-
+    
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
     if x > grid_x[-1]:  #edge cases
