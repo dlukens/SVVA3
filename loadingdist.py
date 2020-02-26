@@ -153,7 +153,7 @@ def A_quadint(x):
 #Reaction forces
     
 
-Rxn= [[0,-eta,0,-eta,0,-eta,(m.sin(alpha)*(eta+0.5*h) +m.cos(alpha)*0.5*h)*(La-xI),0,0,0,0,0],   #g  #T(la)
+Rxn= [[0,-eta,0,-eta,0,-eta,(m.sin(alpha)*(eta+0.5*h) +m.cos(alpha)*0.5*h),0,0,0,0,0],   #g  #T(la)
         [La-x1,0,La-x2,0,La-x3,0,-m.cos(alpha)*(La-xI),0,0,0,0,0],                                  #g  #My(la)
         [0,(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-xI),0,0,0,0,0],                               #g #Mz(la)
         [1,0,1,0,1,0,-m.cos(alpha),0,0,0,0,0],                                                       #g   #Sz(la)
@@ -168,13 +168,13 @@ Rxn= [[0,-eta,0,-eta,0,-eta,(m.sin(alpha)*(eta+0.5*h) +m.cos(alpha)*0.5*h)*(La-x
   
 
 Bc= [[-A_SC_int(La) - P*eta/(G*J)*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)],  #T(la) #g
-       [P*m.cos(alpha)*(La - x2 - 0.5*xa)],                             #My(la) #g
-       [A_SC_doubleint(La) + P*m.sin(alpha)*(La-xI)],          #Mz(la) #g
+       [P*m.cos(alpha)*(La - xII)],                             #My(la) #g
+       [A_SC_doubleint(La) + P*m.sin(alpha)*(La-xII)],          #Mz(la) #g
        [P*m.cos(alpha)],                                                #Sz(la) #g
-       [A_int(La) + P*m.sin(alpha)],                                    #Sy(la) #g
+       [P*m.sin(alpha) +A_int(La) ],                                    #Sy(la) #g
        [d1*m.sin(alpha) ],                                               #w(x1)
        [0],                                                             #w(x2)
-       [d3*m.sin(alpha) -P*m.cos(alpha)*(x3-xI)**3/(6*E*Iyy)],   #w(x3)
+       [d3*m.sin(alpha) -P*m.cos(alpha)*(x3-xII)**3/(6*E*Iyy)],   #w(x3)
        [0-A_quadint(xI)*m.sin(alpha)/(6*E*Izz) + eta*A_SC_doubleint(xI)*m.sin(alpha)/(G*J) ],   #w'(xI)
        [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - (eta*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
        [-A_quadint(x2)/(6*E*Izz) - eta*A_SC_doubleint(x2)/(G*J)],
@@ -183,9 +183,20 @@ Bc= [[-A_SC_int(La) - P*eta/(G*J)*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)]
 
 
 
-F = np.linalg.solve(Rxn, Bc)
+F= np.linalg.solve(Rxn, Bc)
 
-# #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
+R1z=F[0]
+R1y=F[1]
+R2z=F[2]
+R2y=F[3]
+R3z=F[4]
+R3y=F[5]
+RI=F[6]
+C1=F[7]
+C2=F[8]
+C3=F[9]
+C4=F[10]
+C5=F[11]
 
 # #Torque X-axis
 # def Tx(x): return A_SC_int(x) - eta*R1y*step(x,x1,0) - eta*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - eta*R2y*step(x, x2, 0) + eta*P*m.sin(alpha)*(x, x2 + xa/2, 0) - eta*R3y*step(x, x3, 0)
