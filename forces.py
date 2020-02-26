@@ -1,8 +1,7 @@
 import numpy as np
-from interp import C0_z, C0_x, grid_z, grid_x, data
+from interp import C0_z, C0_x, grid_z, grid_x
 import interp
 import matplotlib.pyplot as plt
-import tools as t
 
 #Integrating once the interpolated force function
 #S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
@@ -58,7 +57,7 @@ def integrate2(C1, grid):
     return I, I_sum
 
 
-I_z, I_zsum = integrate(C0_z, grid_z)
+I_z, I_zsum = integrate(C0_z, -grid_z)
 I_x, I_xsum = integrate(C0_x, grid_x)
 
 A_coeff = interp.interpolate1d(I_zsum, grid_x)    
@@ -70,7 +69,7 @@ C1_x = polyintegrate(C0_x)
 
 
 #Second integration
-II_z, II_zsum = integrate2(C1_z, grid_z)
+II_z, II_zsum = integrate2(C1_z, -grid_z)
 II_x, II_xsum = integrate2(C1_x, grid_x)
 
 

@@ -5,14 +5,14 @@
 #for double integration tool, normal simpson rule
 import numpy as np
 import matplotlib.pyplot as plt
-
+import interp
 
 
 def f(x):
     return 1 / x
                     
 
-def integral(f, lower_bound, upper_bound, n=120):
+def integral(f, lower_bound, upper_bound, n=60):
     # f = function
     # n = number of sub-intervals, must be multiple of 3
     if n % 3 >=1:
@@ -26,6 +26,24 @@ def integral(f, lower_bound, upper_bound, n=120):
             som = som + 3 * f(lower_bound + i*step_size)
     R = ((3*step_size)/8)* som
     return (R)
+
+def integral2(f, lower, upper, h=60):
+
+    I = np.zeros(h)
+    I2 = np.zeros(h)
+    grid = np.linspace(lower, upper, h)
+    
+    for i in range(len(grid)-1):         
+        I[i+1] = I[i] + integral(f, grid[i], grid[i+1])
+    
+    C = interp.interpolate1d(I, grid)
+    
+    for j in range(len(grid)-1):
+        def f1(x):
+            return C[0,j]*(x - grid[j])**3 + C[1,j]*(x - grid[j])**2 + C[2,j]*(x - grid[j]) + C[3,j]
+        
+        I2[j+1] = I2[j] + integral(f1, grid[j], grid[j+1])
+    return I2[-1]
 
 
 def f2(x,y):
