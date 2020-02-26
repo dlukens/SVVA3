@@ -36,21 +36,21 @@ def A_SC_int(x):
         g = Cp_coeff[2, i]
         h = Cp_coeff[3, i]
             
-        def f(z):
-            return x*(a*SCz/4*(x-grid_x[idx])**3 + b*SCz/3*(x-grid_x[idx])**2 + c*SCz/2*(x-grid_x[idx]) + d*SCz   \
-                        -  a/7*(x-grid_x[idx])**6                                  \
-                        - (a*f + b*e)/6*(x-grid_x[idx])**5                         \
-                        - (a*g + b*f + c*e)/5*(x-grid_x[idx])**4                   \
-                        - (a*h + b*g + c*f + d*e)/4*(x-grid_x[idx])**3             \
-                        - (b*h + c*g + d*f)/3*(x-grid_x[idx])**2                   \
-                        - (c*h + d*g)/2*(x-grid_x[idx])                            \
+        def func(z):
+            return z*(a*SCz/4*(z-grid_x[i])**3 + b*SCz/3*(z-grid_x[i])**2 + c*SCz/2*(z-grid_x[i]) + d*SCz   \
+                        -  a/7*(z-grid_x[i])**6                                  \
+                        - (a*f + b*e)/6*(z-grid_x[i])**5                         \
+                        - (a*g + b*f + c*e)/5*(z-grid_x[i])**4                   \
+                        - (a*h + b*g + c*f + d*e)/4*(z-grid_x[i])**3             \
+                        - (b*h + c*g + d*f)/3*(z-grid_x[i])**2                   \
+                        - (c*h + d*g)/2*(z-grid_x[i])                            \
                         -  d*h)
         
         if i != idx-2:
-            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+            I[i+1] = I[i] + func(grid_x[i + 1]) - func(grid_x[i])
         else:
-            I[i+1] = I[i] + f(x) - f(grid_x[i])
-    return I                        
+            I[i+1] = I[i] + func(x) - func(grid_x[i])
+    return I[-1]                     
 
                         
 def A_SC_doubleint(x):
@@ -67,21 +67,21 @@ def A_SC_doubleint(x):
         g = Cp_coeff[2, i]
         h = Cp_coeff[3, i]
             
-        def f(z):
-            return x**2*(a*SCz/(4*5)*(x-grid_x[idx])**3 + b*SCz/(3*4)*(x-grid_x[idx])**2 + c*SCz/(2*3)*(x-grid_x[idx]) + d*SCz/2 \
-                        -  a/(8*7)*(x-grid_x[idx])**6 \
-                        - (a*f + b*e)/(6*7)*(x-grid_x[idx])**5 \
-                        - (a*g + b*f + c*e)/(5*6)*(x-grid_x[idx])**4 \
-                        - (a*h + b*g + c*f + d*e)/(4*5)*(x-grid_x[idx])**3 \
-                        - (b*h + c*g + d*f)/(3*4)*(x-grid_x[idx])**2 \
-                        - (c*h + d*g)/(2*3)*(x-grid_x[idx]) \
+        def func(z):
+            return z**2*(a*SCz/(4*5)*(z-grid_x[i])**3 + b*SCz/(3*4)*(z-grid_x[i])**2 + c*SCz/(2*3)*(z-grid_x[i]) + d*SCz/2 \
+                        -  a/(8*7)*(z-grid_x[i])**6 \
+                        - (a*f + b*e)/(6*7)*(z-grid_x[i])**5 \
+                        - (a*g + b*f + c*e)/(5*6)*(z-grid_x[i])**4 \
+                        - (a*h + b*g + c*f + d*e)/(4*5)*(z-grid_x[i])**3 \
+                        - (b*h + c*g + d*f)/(3*4)*(z-grid_x[i])**2 \
+                        - (c*h + d*g)/(2*3)*(z-grid_x[i]) \
                         -  d*h/2)
         
         if i != idx-2:
-            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+            I[i+1] = I[i] + func(grid_x[i + 1]) - func(grid_x[i])
         else:
-            I[i+1] = I[i] + f(x) - f(grid_x[i])
-    return I
+            I[i+1] = I[i] + func(x) - func(grid_x[i])
+    return I[-1]
     
     
 def A_int(x):
@@ -101,7 +101,7 @@ def A_int(x):
             I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
         else:
             I[i+1] = I[i] + f(x) - f(grid_x[i])
-    return I
+    return I[-1]
 
     
 def A_doubleint(x):
@@ -115,16 +115,16 @@ def A_doubleint(x):
         d = A_coeff[3, i]
             
         def f(z):
-            return x**2*(a/(4*5)*(x-grid_x[i])**3     \
-               + b/(3*4)*(x-grid_x[i])**2     \
-               + c/(2*3)*(x-grid_x[i])        \
+            return z**2*(a/(4*5)*(z-grid_x[i])**3     \
+               + b/(3*4)*(z-grid_x[i])**2     \
+               + c/(2*3)*(z-grid_x[i])        \
                + d/2)
         
         if i != idx-2:
             I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
         else:
             I[i+1] = I[i] + f(x) - f(grid_x[i])
-    return I
+    return I[-1]
 
 def A_quadint(x):
     idx = np.searchsorted(grid_x, x)-1
@@ -137,16 +137,16 @@ def A_quadint(x):
         d = A_coeff[3, i]
             
         def f(z):
-            return x**4*(a/(4*5*6*7)*(x-grid_x[i])**3     \
-               + b/(3*4*5*6)*(x-grid_x[i])**2     \
-               + c/(2*3*4*5)*(x-grid_x[i])        \
+            return z**4*(a/(4*5*6*7)*(z-grid_x[i])**3     \
+               + b/(3*4*5*6)*(z-grid_x[i])**2     \
+               + c/(2*3*4*5)*(z-grid_x[i])        \
                + d/(2*3*4))
         
         if i != idx-2:
             I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
         else:
             I[i+1] = I[i] + f(x) - f(grid_x[i])
-    return I
+    return I[-1]
 
 
     
