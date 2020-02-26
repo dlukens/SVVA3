@@ -11,7 +11,8 @@ import tools as t
 ###variables
 alpha = m.radians(25) # angle of attack
 eta = SCz + h/2       # distance midpoint spar - shear center
-
+xI=x2-0.5*xa
+xII=x2+0.5*xa
 ###Funcions
 
 def step(x, x1, exp): #Mcaulay step function
@@ -130,24 +131,21 @@ def A_quadint(x):
     
 #Reaction forces
     
-xI=x2-0.5*xa
-
-Rxn= [[0,-SCz,0,-SCz,0,-SCz,-SCz*m.sin(alpha),0,0,0,0,0],                                                                                                   #T(la)
-        [La-x1,0,La-x2,0,La-x3,0,-m.cos(alpha)*(La-x2+0.5*xa),0,0,0,0,0],                                                                                     #My(la)
-        [0,-(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-x2+xa*0.5),0,0,0,0,0],                                                                              #Mz(la)
+Rxn= [[0,-eta,0,-eta,0,-eta,(m.sin(alpha)*(eta+0.5*h) +m.cos(alpha)*0.5*h)*(La-xI),0,0,0,0,0],                                                                                                   #T(la)
+        [La-x1,0,La-x2,0,La-x3,0,-m.cos(alpha)*(La-xI),0,0,0,0,0],                                                                                     #My(la)
+        [0,(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-xI),0,0,0,0,0],                                                                              #Mz(la)
         [1,0,1,0,1,0,-m.cos(alpha),0,0,0,0,0],                                                                                                                #Sz(la)
-        [0,-1,0,-1,0,-1,-m.sin(alpha),0,0,0,0,0],                                                                                                             #Sy(la)
+        [0,1,0,1,0,1,-m.sin(alpha),0,0,0,0,0],                                                                                                             #Sy(la)
         [0,0,0,0,0,0,0,0,0,x1,1,0],                                                                                                                        #w(x1)
-        [(x2-x1)**3,0,0,0,0,0,-m.cos(alpha)*(xa/2)**3,0,0,x2**3,1,0],                                                                                         #w(x2)
-        [(x3-x1)**3,0,(x3-x2)**3,0,0,0,0,0,0,x3**3,1,0],                                                                                                      #w(x3)
-        [-m.cos(alpha)*(xI-x1)**3/(E*Izz),-m.sin(alpha)*(xI-x1)**3/(E*Iyy) + SCz**2*(xI-x1)*m.sin(alpha)/(G*J),0,0,0,0,0,xI*m.sin(alpha)/(E*Iyy),m.sin(alpha)/(E*Iyy),-xI*m.cos(alpha)/(E*Izz),-m.cos(alpha)/(E*Izz),-SCz*m.sin(alpha)/(G*J)],                    #w'(xI)=0
-        [0,0,0,0,0,0,0,x1/(-E*Izz),1/(-E*Izz),0,0,SCz/(G*J)],                                                                                                                           #v(x1)+theta(x1)
-        [0,-(x2-x1)**3/(-E*Izz)-SCz**2*(x2-x1)/(G*J),0,0,0,0,-m.sin(alpha)*(xa/2)**3/(-E*Izz) - SCz**2*m.sin(alpha)*(xa/2)/(G*J),x2/(-E*Izz),1/(-E*Izz),0,0,SCz],                                               #v(x2)+theta(x2)
-        [0,-(x3-x1)**3/(-E*Izz)-SCz**2*(x3-x1)/(G*J),0,-(x3-x2)**3/(-E*Izz)-SCz**2*(x3-x2)/(G*J),0,0,-m.sin(alpha)*(x3-x2+0.5*xa)**3/(-E*Izz) - SCz**2*m.sin(alpha)*(x3-x2+xa*0.5)/(G*J),x3/(-E*Izz),1/(-E*Izz),0,0,SCz/(G*J)]]      #v(x3)+theta(x3)
+        [(x2-x1)**3,0,0,0,0,0,-m.cos(alpha)*(x2-xI)**3,0,0,x2,1,0],                                                                                         #w(x2)
+        [(x3-x1)**3,0,(x3-x2)**3,0,0,0,-m.cos(alpha)*(x3-xI)**3,0,0,x3,1,0],                                                                                                      #w(x3)
+        [-m.cos(alpha)*(xI-x1)**3/(6*E*Iyy),m.sin(alpha)*((xI-x1)**3/(6*E*Izz) +eta**2*(xI-x1)**3/(G*J)),0,0,0,0,0,-xI*m.sin(alpha),-m.sin(alpha),xI*m.cos(alpha),m.cos(alpha),-eta*m.sin(alpha)],                    #w'(xI)=0
+        [0,0,0,0,0,0,0,x1,1,0,0,eta],                                                                                                                           #v(x1)+theta(x1)
+        [0,-(x2-x1)**3/(6*E*Izz)-eta**2*(x2-x1)/(G*J),0,0,0,0,m.sin(alpha)*(x2-xI)**3/(6*E*Izz) + eta**2*m.sin(alpha)*(x2-xI)/(G*J),x2,1,0,0,eta],                                               #v(x2)+theta(x2)
+        [0,-(x3-x1)**3/(6*E*Izz)-eta**2*(x3-x1)/(G*J),0,-(x3-x2)**3/(6*E*Izz)-eta**2*(x3-x2)/(G*J),0,0,m.sin(alpha)*(x3-xI)**3/(6*E*Izz) - eta**2*m.sin(alpha)*(x3-xI)/(G*J),x3,1,0,0,eta]]      #v(x3)+theta(x3)
   
 
-
-Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],                              #T(la) 
+Bc= [[-A_SC_int(La) - eta*P*m.sin(alpha)],                              #T(la) 
        [P*m.cos(alpha)*(La - x2 - 0.5*xa)],                             #My(la)
        [A_SC_doubleint(La) + P*m.sin(alpha)*(La-x2 - 0.5*xa)],          #Mz(la)
        [P*m.cos(alpha)],                                                #Sz(la)
@@ -156,9 +154,9 @@ Bc= [[-A_SC_int(La) - SCz*P*m.sin(alpha)],                              #T(la)
        [0],                                                             #w(x2)
        [-d3*m.sin(alpha)*E*Iyy - P*m.cos(alpha)*(x3 - x2 - 0.5*xa)**3], #w(x3)
        [0],                                                             #w(xI)
-       [d1*m.cos(alpha) + (A_quadint(x1)/(E*Izz)) - (SCz*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
-       [A_quadint(x2)/(E*Izz) - SCz*A_SC_doubleint(x2)/(G*J)],
-       [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (SCz*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - SCz**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
+       [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - (eta*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
+       [-A_quadint(x2)/(6*E*Izz) - eta*A_SC_doubleint(x2)/(G*J)],
+       [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (eta*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - eta**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
 
 
 F = np.linalg.solve(Rxn, Bc)
@@ -166,7 +164,7 @@ F = np.linalg.solve(Rxn, Bc)
 # #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
 # #Torque X-axis
-# def Tx(x): return A_SC_int(x) - SCz*R1y*step(x,x1,0) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - SCz*R2y*step(x, x2, 0) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 0) - SCz*R3y*step(x, x3, 0)
+# def Tx(x): return A_SC_int(x) - eta*R1y*step(x,x1,0) - eta*R1*m.sin(alpha)*step(x, x2-xa/2, 0) - eta*R2y*step(x, x2, 0) + eta*P*m.sin(alpha)*(x, x2 + xa/2, 0) - eta*R3y*step(x, x3, 0)
 
 # #Moment in y-axis
 # def My(x): return R1z*step(x, x1, 1) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 1)) + R2z*step(x, x2, 1) + P*m.cos(alpha)*step(x, x2 + xa/2, 1) + R3z*step(x,x3, 1)
@@ -187,4 +185,4 @@ F = np.linalg.solve(Rxn, Bc)
 # def w(x): return (-1/(E*Iyy))*(R1z*step(x, x1, 3) - R1*m.cos(alpha)*(step(x, x2 - xa/2, 3)) + R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, x2 + xa/2, 3) + R3z*step(x,x3, 3) + C3*step(x,0, 1) + C4)
 
 # #Twist 
-# def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - SCz*R1y*step(x,x1,1) - SCz*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - SCz*R2y*step(x, x2, 1) + SCz*P*m.sin(alpha)*(x, x2 + xa/2, 1) - SCz*R3y*step(x, x3, 1) + C5)
+# def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) - eta*R1*m.sin(alpha)*step(x, x2-xa/2, 1) - eta*R2y*step(x, x2, 1) + eta*P*m.sin(alpha)*(x, x2 + xa/2, 1) - eta*R3y*step(x, x3, 1) + C5)
