@@ -145,13 +145,8 @@ beginnode=0.001
 endnode=La-0.002
 nodesnumber=100
 deltax=(endnode-beginnode)/(nodesnumber)
-
-
-
-
-        
-
-
+##################################################################
+#Plot the aileron
 plt.scatter(z01,y01,color='blue')
 plt.scatter(z12,y12,color='blue')
 plt.scatter(z23,y23,color='blue')
