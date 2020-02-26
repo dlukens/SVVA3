@@ -24,21 +24,20 @@ def step(x, x1, exp): #Mcaulay step function
     
 def A_SC_int(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x > grid_x[-1]:  #edge cases
-        idx = len(grid_x)-2 
-        x = grid_x[-1]
-    if x < grid_x[0]: 
-        idx = 0
-        x = grid_x[0]
-    a = A_coeff[0, idx]
-    b = A_coeff[1, idx]
-    c = A_coeff[2, idx]
-    d = A_coeff[3, idx]
-    e = Cp_coeff[0, idx]
-    f = Cp_coeff[1, idx]
-    g = Cp_coeff[2, idx]
-    h = Cp_coeff[3, idx]
-    return x*(a*SCz/4*(x-grid_x[idx])**3 + b*SCz/3*(x-grid_x[idx])**2 + c*SCz/2*(x-grid_x[idx]) + d*SCz   \
+    I = np.zeros(idx)
+    
+    for i in range(idx-1):
+        a = A_coeff[0, i]
+        b = A_coeff[1, i]
+        c = A_coeff[2, i]
+        d = A_coeff[3, i]
+        e = Cp_coeff[0, i]
+        f = Cp_coeff[1, i]
+        g = Cp_coeff[2, i]
+        h = Cp_coeff[3, i]
+            
+        def f(z):
+            return x*(a*SCz/4*(x-grid_x[idx])**3 + b*SCz/3*(x-grid_x[idx])**2 + c*SCz/2*(x-grid_x[idx]) + d*SCz   \
                         -  a/7*(x-grid_x[idx])**6                                  \
                         - (a*f + b*e)/6*(x-grid_x[idx])**5                         \
                         - (a*g + b*f + c*e)/5*(x-grid_x[idx])**4                   \
@@ -46,26 +45,30 @@ def A_SC_int(x):
                         - (b*h + c*g + d*f)/3*(x-grid_x[idx])**2                   \
                         - (c*h + d*g)/2*(x-grid_x[idx])                            \
                         -  d*h)
-                        
+        
+        if i != idx-2:
+            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+        else:
+            I[i+1] = I[i] + f(x) - f(grid_x[i])
+    return I                        
 
                         
 def A_SC_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x > grid_x[-1]: #edge cases
-        idx = len(grid_x)-2 
-        x = grid_x[-1]
-    if x < grid_x[0]: 
-        idx = 0
-        x = grid_x[0]
-    a = A_coeff[0, idx]
-    b = A_coeff[1, idx]
-    c = A_coeff[2, idx]
-    d = A_coeff[3, idx]
-    e = Cp_coeff[0, idx]
-    f = Cp_coeff[1, idx]
-    g = Cp_coeff[2, idx]
-    h = Cp_coeff[3, idx]
-    return x**2*(a*SCz/(4*5)*(x-grid_x[idx])**3 + b*SCz/(3*4)*(x-grid_x[idx])**2 + c*SCz/(2*3)*(x-grid_x[idx]) + d*SCz/2 \
+    I = np.zeros(idx)
+    
+    for i in range(idx-1):
+        a = A_coeff[0, i]
+        b = A_coeff[1, i]
+        c = A_coeff[2, i]
+        d = A_coeff[3, i]
+        e = Cp_coeff[0, i]
+        f = Cp_coeff[1, i]
+        g = Cp_coeff[2, i]
+        h = Cp_coeff[3, i]
+            
+        def f(z):
+            return x**2*(a*SCz/(4*5)*(x-grid_x[idx])**3 + b*SCz/(3*4)*(x-grid_x[idx])**2 + c*SCz/(2*3)*(x-grid_x[idx]) + d*SCz/2 \
                         -  a/(8*7)*(x-grid_x[idx])**6 \
                         - (a*f + b*e)/(6*7)*(x-grid_x[idx])**5 \
                         - (a*g + b*f + c*e)/(5*6)*(x-grid_x[idx])**4 \
@@ -73,61 +76,77 @@ def A_SC_doubleint(x):
                         - (b*h + c*g + d*f)/(3*4)*(x-grid_x[idx])**2 \
                         - (c*h + d*g)/(2*3)*(x-grid_x[idx]) \
                         -  d*h/2)
+        
+        if i != idx-2:
+            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+        else:
+            I[i+1] = I[i] + f(x) - f(grid_x[i])
+    return I
     
     
 def A_int(x):
     idx = np.searchsorted(grid_x, x)-1
-
     I = np.zeros(idx)
     
-        
     for i in range(idx-1):
-        a = A_coeff[0, idx]
-        b = A_coeff[1, idx]
-        c = A_coeff[2, idx]
-        d = A_coeff[3, idx]
-    
-        I[idx+1] = x*(a/4*(x-grid_x[idx])**3      \
-                  + b/3*(x-grid_x[idx])**2      \
-                  + c/2*(x-grid_x[idx])         \
-                  + d)
+        a = A_coeff[0, i]
+        b = A_coeff[1, i]
+        c = A_coeff[2, i]
+        d = A_coeff[3, i]
+            
+        def f(z):
+            return 1/4*a*(z - grid_x[i])**4 + 1/3*b*(z - grid_x[i])**3 + 1/2*c*(z - grid_x[i])**2 + d*z
+        
+        if i != idx-2:
+            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+        else:
+            I[i+1] = I[i] + f(x) - f(grid_x[i])
+    return I
 
-    
-Afff = A_int(1)
     
 def A_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x > grid_x[-1]:  #edge cases
-        idx = len(grid_x)-2 
-        x = grid_x[-1]
-    if x < grid_x[0]: 
-        idx = 0
-        x = grid_x[0]
-    a = A_coeff[0, idx]
-    b = A_coeff[1, idx]
-    c = A_coeff[2, idx]
-    d = A_coeff[3, idx]  
-    return x**2*(a/(4*5)*(x-grid_x[idx])**3     \
-               + b/(3*4)*(x-grid_x[idx])**2     \
-               + c/(2*3)*(x-grid_x[idx])        \
+    I = np.zeros(idx)
+    
+    for i in range(idx-1):
+        a = A_coeff[0, i]
+        b = A_coeff[1, i]
+        c = A_coeff[2, i]
+        d = A_coeff[3, i]
+            
+        def f(z):
+            return x**2*(a/(4*5)*(x-grid_x[i])**3     \
+               + b/(3*4)*(x-grid_x[i])**2     \
+               + c/(2*3)*(x-grid_x[i])        \
                + d/2)
+        
+        if i != idx-2:
+            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+        else:
+            I[i+1] = I[i] + f(x) - f(grid_x[i])
+    return I
 
 def A_quadint(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x > grid_x[-1]:  #edge cases
-        idx = len(grid_x)-2 
-        x = grid_x[-1]
-    if x < grid_x[0]: 
-        idx = 0
-        x = grid_x[0]
-    a = A_coeff[0, idx]
-    b = A_coeff[1, idx]
-    c = A_coeff[2, idx]
-    d = A_coeff[3, idx]
-    return x**4*(a/(4*5*6*7)*(x-grid_x[idx])**3     \
-               + b/(3*4*5*6)*(x-grid_x[idx])**2     \
-               + c/(2*3*4*5)*(x-grid_x[idx])        \
+    I = np.zeros(idx)
+    
+    for i in range(idx-1):
+        a = A_coeff[0, i]
+        b = A_coeff[1, i]
+        c = A_coeff[2, i]
+        d = A_coeff[3, i]
+            
+        def f(z):
+            return x**4*(a/(4*5*6*7)*(x-grid_x[i])**3     \
+               + b/(3*4*5*6)*(x-grid_x[i])**2     \
+               + c/(2*3*4*5)*(x-grid_x[i])        \
                + d/(2*3*4))
+        
+        if i != idx-2:
+            I[i+1] = I[i] + f(grid_x[i + 1]) - f(grid_x[i])
+        else:
+            I[i+1] = I[i] + f(x) - f(grid_x[i])
+    return I
 
 
     
