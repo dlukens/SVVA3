@@ -121,7 +121,7 @@ def A_quadint(x):
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
-    d = A_coeff[3, idx] 
+    d = A_coeff[3, idx]
     return x**4*(a/(4*5*6*7)*(x-grid_x[idx])**3     \
                + b/(3*4*5*6)*(x-grid_x[idx])**2     \
                + c/(2*3*4*5)*(x-grid_x[idx])        \
