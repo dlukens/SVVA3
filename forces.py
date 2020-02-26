@@ -1,8 +1,7 @@
 import numpy as np
-from interp import C0_z, C0_x, grid_z, grid_x, data
+from interp import C0_z, C0_x, grid_z, grid_x
 import interp
 import matplotlib.pyplot as plt
-import tools as t
 
 #Integrating once the interpolated force function
 #S(z) = a(z-z_i)^3 + b(z-z_i)^2 + c(z-z_i) + d
