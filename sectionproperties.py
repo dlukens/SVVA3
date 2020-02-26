@@ -164,13 +164,13 @@ b = np.matrix([[T],
                [0]])
 
 X = np.zeros((3,3))
-x1, x2, x3 = 2*A1, 2*A2, 0
-x4, x5, x6 = (1/(2*A1))*(m.pi*h/(2*Tsk) + h/Tsp), (-1/(2*A1))*h/Tsp, -G
-x7, x8, x9 = (-1/(2*A2))*h/Tsp, (1/(2*A2))*(h/Tsp + 2*Lssk/Tsk), -G
+X1, X2, X3 = 2*A1, 2*A2, 0
+X4, X5, X6 = (1/(2*A1))*(m.pi*h/(2*Tsk) + h/Tsp), (-1/(2*A1))*h/Tsp, -G
+X7, X8, X9 = (-1/(2*A2))*h/Tsp, (1/(2*A2))*(h/Tsp + 2*Lssk/Tsk), -G
 
-X[0,:] = x1, x2, x3
-X[1,:] = x4, x5, x6
-X[2,:] = x7, x8, x9
+X[0,:] = X1, X2, X3
+X[1,:] = X4, X5, X6
+X[2,:] = X7, X8, X9
 
 Q = np.linalg.solve(X, b)
 dtheta_dx = Q[2,0] # rate of twist [rad/m]
