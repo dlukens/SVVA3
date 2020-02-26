@@ -86,13 +86,11 @@ def A_int(x):
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
-    d = A_coeff[3, idx]    
+    d = A_coeff[3, idx]
     return x*(a/4*(x-grid_x[idx])**3      \
             + b/3*(x-grid_x[idx])**2      \
             + c/2*(x-grid_x[idx])         \
             + d)
-
-S = A_int(4)
     
 def A_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
@@ -122,15 +120,17 @@ def A_quadint(x):
     a = A_coeff[0, idx]
     b = A_coeff[1, idx]
     c = A_coeff[2, idx]
-    d = A_coeff[3, idx] 
+    d = A_coeff[3, idx]
     return x**4*(a/(4*5*6*7)*(x-grid_x[idx])**3     \
                + b/(3*4*5*6)*(x-grid_x[idx])**2     \
                + c/(2*3*4*5)*(x-grid_x[idx])        \
                + d/(2*3*4))
 
+
     
 #Reaction forces
     
+
 Rxn= [[0,-eta,0,-eta,0,-eta,(m.sin(alpha)*(eta+0.5*h) +m.cos(alpha)*0.5*h)*(La-xI),0,0,0,0,0],                                                                                                   #T(la)
         [La-x1,0,La-x2,0,La-x3,0,-m.cos(alpha)*(La-xI),0,0,0,0,0],                                                                                     #My(la)
         [0,(La-x1),0,(La-x2),0,(La-x3),-m.sin(alpha)*(La-xI),0,0,0,0,0],                                                                              #Mz(la)
@@ -159,7 +159,9 @@ Bc= [[-A_SC_int(La) - eta*P*m.sin(alpha)],                              #T(la)
        [d3*m.cos(alpha) + (A_quadint(x3)/(E*Izz)) - (eta*A_SC_doubleint(x3)/(G*J)) + P*m.sin(alpha)*(x3 - x2 - 0.5*xa)**3/(E*Izz) - eta**2 *P*m.sin(alpha)*(x3 - x2 - 0.5*xa)/(G*J)]]
 
 
-F = np.linalg.solve(Rxn, Bc)
+
+
+# F = np.linalg.solve(Rxn, Bc)
 
 # #F=np.transpose([R1z,R1y,R2z,R2y,R3z,R3y,RI,C1,C2,C3,C4,C5])
 
