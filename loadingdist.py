@@ -77,20 +77,19 @@ def A_SC_doubleint(x):
     
 def A_int(x):
     idx = np.searchsorted(grid_x, x)-1
-    if x > grid_x[-1]:  #edge cases
-        idx = len(grid_x)-2 
-        x = grid_x[-1]
-    if x < grid_x[0]: 
-        idx = 0
-        x = grid_x[0]
-    a = A_coeff[0, idx]
-    b = A_coeff[1, idx]
-    c = A_coeff[2, idx]
-    d = A_coeff[3, idx]
-    return x*(a/4*(x-grid_x[idx])**3      \
-            + b/3*(x-grid_x[idx])**2      \
-            + c/2*(x-grid_x[idx])         \
-            + d)
+    I = np.zeros(idx)
+    
+        
+    for i in range(idx-1):
+        a = A_coeff[0, idx]
+        b = A_coeff[1, idx]
+        c = A_coeff[2, idx]
+        d = A_coeff[3, idx]
+    
+        I[idx+1] = x*(a/4*(x-grid_x[idx])**3      \
+                  + b/3*(x-grid_x[idx])**2      \
+                  + c/2*(x-grid_x[idx])         \
+                  + d)
     
 def A_doubleint(x):
     idx = np.searchsorted(grid_x, x)-1
