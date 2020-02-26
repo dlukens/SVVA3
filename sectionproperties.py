@@ -62,8 +62,7 @@ z_bar_spar = -0.5*h                                               #centroid spar
 A_tot = Lsk*Tsk + 11*Ast + Tsp*h                                         #total area [m^2]
 
 Cz = (2*Ast*(z_st1+z_st2+z_st3+z_st4+z_st5) + Tsp*h*z_bar_spar  + 2*z_bar_Lssk*Lssk*Tsk + z_bar_arc*0.5*m.pi*h*Tsk)/A_tot #aileron centroid [m]
-
-print(Cz)
+#print(Cz)
 
 z = [z_st0, z_st1, z_st2, z_st3, z_st4,z_st5]
 y = [y_st0, y_st1, y_st2, y_st3, y_st4, y_st5]
@@ -82,7 +81,7 @@ for i in y :
     Izz += steiner
 
 Izz += 2*(Izz_ss + Ad_zss) + Izz_sp + Izz_arc # [m^4]
-print(Izz)
+#print(Izz)
 
 Iyy_ss = (1/12)*Tsk*Lssk**3*(m.cos(angle_Lssk))**2
 Ad_yss = Lssk*Tsk*(Ca+Cz-0.5*Lssk*m.cos(angle_Lssk))**2
@@ -99,7 +98,7 @@ for i in z[1:] :
     Iyy += steiner
     
 Iyy += Ast*Cz**2 + 2*(Iyy_ss + Ad_yss) + Iyy_sp + Iyy_arc +Ad_yarc # [m^4]
-print(Iyy)
+#print(Iyy)
 
 # Shear Center
 
@@ -149,7 +148,7 @@ Mi = (h/2)*(S1 + S6) + d*(S3 + S4) + 2*(A1*q0_1 + A2*q0_2)
 
 Ksi = -Mi/Sy # distance midpoint spar - shear center (positive)
 SCz = -h/2 - Ksi # shear center [m]
-print(SCz)
+#print(SCz)
 
 # Torsional Stiffness
 
@@ -177,7 +176,7 @@ Q = np.linalg.solve(X, b)
 dtheta_dx = Q[2,0] # rate of twist [rad/m]
 
 J = T/(G*dtheta_dx) # torsional stiffness [m^4]
-print(J)
+#print(J)
 
 
 
