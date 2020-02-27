@@ -295,11 +295,11 @@ qb34 = integral(d_qb34, 0, h/2) + qb23                             # [N/m]
 # redundant shear flows (defined clockwise positive like the base flows)
 
 X = np.zeros((2,2))
-x1, x2 = ((h*m.pi)/(2*Tsk) + h/Tsp), -h/Tsp
-x3, x4 = -h/Tsp, ((2*Lssk)/Tsk + h/Tsp)
+X1, X2 = ((h*m.pi)/(2*Tsk) + h/Tsp), -h/Tsp
+X3, X4 = -h/Tsp, ((2*Lssk)/Tsk + h/Tsp)
 
-X[0,:] = x1, x2
-X[1,:] = x3, x4
+X[0,:] = X1, X2
+X[1,:] = X3, X4
 
 Y = np.zeros((2,1))
 

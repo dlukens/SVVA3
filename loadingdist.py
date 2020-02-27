@@ -212,18 +212,18 @@ Bc=[[-A_SC_int(La) - P*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(La, xI
 F= np.linalg.solve(Rxn, Bc)
 
 
-R1z=F[0]
-R1y=F[1]
-R2z=F[2]
-R2y=F[3]
-R3z=F[4]
-R3y=F[5]
-RI=F[6]
-C1=F[7]
-C2=F[8]
-C3=F[9]
-C4=F[10]
-C5=F[11]
+R1z=float(F[0])
+R1y=float(F[1])
+R2z=float(F[2])
+R2y=float(F[3])
+R3z=float(F[4])
+R3y=float(F[5])
+RI=float(F[6])
+C1=float(F[7])
+C2=float(F[8])
+C3=float(F[9])
+C4=float(F[10])
+C5=float(F[11])
 
  #Torque X-axis
 def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xI,0) - eta*R2y*step(xx,x2,0) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xII,0) -eta*R3y*step(xx,x3,0)
@@ -241,14 +241,43 @@ def Sy(x): return -A_int(x) + R1y*step(x, x1, 0) - RI*m.sin(alpha)*(x, xI, 0) + 
 def Sz(x): return R1z*step(x, x1, 0) - RI*m.cos(alpha)*(step(x, xI, 0)) + R2z*step(x, x2, 0) - P*m.cos(alpha)*step(x, xII, 0) + R3z*step(x,x3, 0)
 
  #Deflection in Y-axis
-def v(x): return (1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) +C1*step(x,0,1) + C2
+def v(x): return -(1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*step(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) -C1*step(x,0,1) #+ C2
+
 
  #Deflection in Z-axis
-def w(x): return (1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) + C3*step(x,0,1) + C4
+def w(x): return -(1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) - C3*step(x,0,1) - C4
 
  #Twist around X-axis
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) + RI*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xI, 1) - eta*R2y*step(x, x2, 1) + P(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xII, 1) - eta*R3y*step(x, x3, 1)) + C5              
+def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xI,1) - eta*R2y*step(x,x2,1) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xII,1) -eta*R3y*step(x,x3,1)) #+ C5              
 
 
+beginnode = 0.01
+endnode = 2.68
+nodesnumber = 1000
+deltax = (endnode - beginnode)/(nodesnumber)
 
-   
+lst=np.arange(beginnode,endnode+deltax,deltax)
+thetalist=np.zeros(len(lst))
+vdeflectionlist=np.zeros(len(lst))
+wdeflectionlist=np.zeros(len(lst))
+
+for i in range(len(lst)):
+    thetalist[i]=theta(lst[i])
+    vdeflectionlist[i]=v(lst[i])
+    wdeflectionlist[i]=w(lst[i])
+
+plt.subplot(131)    
+plt.plot(lst,thetalist, color='red')
+plt.title('Twist')
+
+plt.subplot(132)
+plt.plot(lst,vdeflectionlist, color='green')
+plt.title('vdeflection')
+
+plt.subplot(133)
+plt.plot(lst,wdeflectionlist, color='blue')
+plt.title('wdeflection')
+plt.show
+
+    
+
