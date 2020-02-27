@@ -204,13 +204,13 @@ Bc=[[-A_SC_int(La) - P*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(La, xI
     [0-P*m.cos(alpha)*step(x2, xII, 3)], #w(x2)
     [-d3*m.sin(alpha)-P*m.cos(alpha)*step(x3, xII, 3)/(6*E*Iyy) ],  #w(x3))
     [0+A_quadint(xI)/(E*Izz)*m.sin(alpha) - m.sin(alpha)*eta*A_SC_doubleint(xI)/(G*J)],
-    [-d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - eta*A_SC_doubleint(x1)/(G*J) - P*m.sin(alpha)*step(x1,xI,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x1,xII,1)*eta/(G*J)],
+    [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - eta*A_SC_doubleint(x1)/(G*J) - P*m.sin(alpha)*step(x1,xI,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x1,xII,1)*eta/(G*J)],
     [0 - (A_quadint(x2)/(E*Izz)) - eta*A_SC_doubleint(x2)/(G*J) - P*m.sin(alpha)*step(x2,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x2,xII,1)*eta/(G*J)],
-    [-d3*m.cos(alpha) - A_quadint(x3)/(6*E*Izz) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*step(x3,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x3,xII,1)*eta/(G*J)]]
+    [d3*m.cos(alpha) - A_quadint(x3)/(6*E*Izz) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*step(x3,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x3,xII,1)*eta/(G*J)]]
 
 
 F= np.linalg.solve(Rxn, Bc)
-
+F1= np.linalg.inv(Rxn).dot(Bc)
 
 R1z=float(F[0])
 R1y=float(F[1])
