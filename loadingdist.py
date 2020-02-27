@@ -232,20 +232,20 @@ def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+h/
 def My(x): return R1z*step(x, x1, 1) - RI*m.cos(alpha)*(step(x, xI, 1)) + R2z*step(x, x2, 1) - P*m.cos(alpha)*step(x, xII, 1) + R3z*step(x,x3, 1)
 
  #Moment in X-axis                                  
-def Mz(x): return -A_doubleint(x) + R1y*step(x, x1, 1) - RI*m.sin(alpha)*(x, xI, 1) + R2y*step(x, x2, 1) - P*m.sin(alpha)*step(x, xII, 1) + R3y*step(x, x3, 1)
+def Mz(x): return -A_doubleint(x) + R1y*step(x, x1, 1) - RI*m.sin(alpha)*step(x, xI, 1) + R2y*step(x, x2, 1) - P*m.sin(alpha)*step(x, xII, 1) + R3y*step(x, x3, 1)
 
  #Shear y-axis
-def Sy(x): return -A_int(x) + R1y*step(x, x1, 0) - RI*m.sin(alpha)*(x, xI, 0) + R2y*step(x, x2, 0) - P*m.sin(alpha)*step(x, xII, 0) + R3y*step(x, x3, 0)
+def Sy(x): return -A_int(x) + R1y*step(x, x1, 0) - RI*m.sin(alpha)*step(x, xI, 0) + R2y*step(x, x2, 0) - P*m.sin(alpha)*step(x, xII, 0) + R3y*step(x, x3, 0)
 
  #Shear Z-Axis
 def Sz(x): return R1z*step(x, x1, 0) - RI*m.cos(alpha)*(step(x, xI, 0)) + R2z*step(x, x2, 0) - P*m.cos(alpha)*step(x, xII, 0) + R3z*step(x,x3, 0)
 
  #Deflection in Y-axis
-def v(x): return -(1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*step(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) -C1*step(x,0,1) #+ C2
+def v(x): return (1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*step(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) +C1*step(x,0,1) #+ C2
 
 
  #Deflection in Z-axis
-def w(x): return -(1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) - C3*step(x,0,1) - C4
+def w(x): return (1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) + C3*step(x,0,1) + C4
 
  #Twist around X-axis
 def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xI,1) - eta*R2y*step(x,x2,1) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xII,1) -eta*R3y*step(x,x3,1)) #+ C5              
@@ -260,24 +260,70 @@ lst=np.arange(beginnode,endnode+deltax,deltax)
 thetalist=np.zeros(len(lst))
 vdeflectionlist=np.zeros(len(lst))
 wdeflectionlist=np.zeros(len(lst))
+Torquelist=np.zeros(len(lst))
+Mylist = np.zeros(len(lst))
+Mzlist = np.zeros(len(lst))
+Sylist = np.zeros(len(lst))
+Szlist = np.zeros(len(lst))
+
+
 
 for i in range(len(lst)):
     thetalist[i]=theta(lst[i])
-    vdeflectionlist[i]=v(lst[i])
+    vdeflectionlist[i]=v(lst[i]) - eta*theta(lst[i])
     wdeflectionlist[i]=w(lst[i])
-
-plt.subplot(131)    
+    Torquelist[i]=T(lst[i])
+    Mylist[i] = My(lst[i])
+    Mzlist[i] = Mz(lst[i])
+    Sylist[i] = Sy(lst[i])
+    Szlist[i] = Sz(lst[i])
+plt.subplot(331)    
 plt.plot(lst,thetalist, color='red')
+plt.xlabel('x[m]')
+plt.ylabel('[degrees]')
 plt.title('Twist')
 
-plt.subplot(132)
+plt.subplot(332)
 plt.plot(lst,vdeflectionlist, color='green')
-plt.title('vdeflection')
+plt.xlabel('x[m]')
+plt.ylabel('v[m]')
+plt.title('Deflection in y')
 
-plt.subplot(133)
-plt.plot(lst,wdeflectionlist, color='blue')
-plt.title('wdeflection')
-plt.show
+#plt.subplot(333)
+#plt.plot(lst,wdeflectionlist, color='blue')
+#plt.xlabel('x[m]')
+#plt.ylabel('w[m]')
+#plt.title('Deflection in z')
+#plt.show()
 
-    
+plt.subplot(334)    
+plt.plot(lst,Torquelist, color='red')
+plt.xlabel('x[m]')
+plt.ylabel('T[Nm]')
+plt.title('Torque')  
 
+#plt.subplot(335)
+#plt.plot(lst,Mylist, color='green')
+#plt.xlabel('x[m]')
+#plt.ylabel('My[m^4]')
+#plt.title('Bending Moment-Y')
+
+#plt.subplot(336)
+#plt.plot(lst,Mzlist, color='blue')
+#plt.xlabel('x[m]')
+#plt.ylabel('Mz[m^4]')
+#plt.title('Bending Moment-Z')
+#plt.show()
+
+#plt.subplot(337)
+#plt.plot(lst,Sylist, color='red')
+#plt.xlabel('x[m]')
+#plt.ylabel('Sy[N]')
+#plt.title('Shear Y')
+#
+#plt.subplot(338)
+#plt.plot(lst,Szlist, color='blue')
+#plt.xlabel('x[m]')
+#plt.ylabel('Sz[N]')
+#plt.title('Shear Z')
+#plt.show()
