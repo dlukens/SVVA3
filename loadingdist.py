@@ -247,7 +247,7 @@ def v(x): return (1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(a
 def w(x): return (1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) + C3*step(x,0,1) + C4
 
  #Twist around X-axis
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) + RI*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xI, 1) - eta*R2y*step(x, x2, 1) + P(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xII, 1) - eta*R3y*step(x, x3, 1)) + C5   
+def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) + RI*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xI, 1) - eta*R2y*step(x, x2, 1) + P(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xII, 1) - eta*R3y*step(x, x3, 1)) + C5              
 
 
 
