@@ -17,7 +17,7 @@ xII=x2+0.5*xa
 
 def step(x, x1, exp): #Mcaulay step function
     y = x - x1
-    if y <= 0: return 0 
+    if y < 0: return 0 
     else: return y**exp
     
 
@@ -170,7 +170,7 @@ Rxn[6]=  [-step(x2, x1, 3)/(6*E*Iyy), 0 , -step(x2, x2, 3)/(6*E*Iyy) , 0 , -step
 
 Rxn[7]=  [-step(x3, x1, 3)/(6*E*Iyy), 0 , -step(x3, x2, 3)/(6*E*Iyy) , 0 , -step(x3, x3, 3)/(6*E*Iyy), 0 , m.cos(alpha)*step(x3, xI, 3)/(6*E*Iyy) , 0 , 0, step(x3,0,1) , 1, 0] #w(x3)
 
-Rxn[8]= [-step(xI, x1, 3)/(6*E*Iyy)*m.cos(alpha), m.sin(alpha)*(step(xI,x1,3)/(6*E*Izz) - eta**2*step(xI,x1,1)/(G*J)) , -step(xI, x2, 3)/(6*E*Iyy)*m.cos(alpha) , 0 , -step(xI, x3, 3)/(6*E*Iyy)*m.cos(alpha), 0 , m.cos(alpha)*step(xI, xI, 3)/(6*E*Iyy)*m.cos(alpha) , -step(xI,0,1)*m.sin(alpha) ,- m.sin(alpha), step(xI,0,1)*m.cos(alpha) , m.cos(alpha), +eta*m.sin(alpha)]  #w(xI)=0    
+Rxn[8]= [-step(xI, x1, 3)/(6*E*Iyy)*m.cos(alpha), -m.sin(alpha)*(step(xI,x1,3)/(6*E*Izz) - eta**2*step(xI,x1,1)/(G*J)) , -step(xI, x2, 3)/(6*E*Iyy)*m.cos(alpha) , 0 , -step(xI, x3, 3)/(6*E*Iyy)*m.cos(alpha), 0 , m.cos(alpha)*step(xI, xI, 3)/(6*E*Iyy)*m.cos(alpha) , step(xI,0,1)*m.sin(alpha) , m.sin(alpha), step(xI,0,1)*m.cos(alpha) , m.cos(alpha), -eta*m.sin(alpha)]  #w(xI)=0    
 
 Rxn[9]= [0,step(x1,x1,3)/(6*E*Izz) - eta**2*step(x1,x1,1)/(G*J), 0, step(x1,x2,3)/(6*E*Izz) - eta**2*step(x1,x2,1)/(G*J), 0 ,step(x1,x3,3)/(6*E*Izz) - eta**2*step(x1,x3,1)/(G*J), m.sin(alpha)*step(x1,xI,3)/(6*E*Izz) - eta*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x1,xI,1)/(G*J), step(x1,0,1),1,0,0,-eta] #d(x1)
 
@@ -179,34 +179,34 @@ Rxn[10]= [0,step(x2,x1,3)/(6*E*Izz) - eta**2*step(x2,x1,1)/(G*J), 0, step(x2,x2,
 Rxn[11]= [0,step(x3,x1,3)/(6*E*Izz) - eta**2*step(x3,x1,1)/(G*J), 0, step(x3,x2,3)/(6*E*Izz) - eta**2*step(x3,x2,1)/(G*J), 0 ,step(x3,x3,3)/(6*E*Izz) - eta**2*step(x3,x3,1)/(G*J), m.sin(alpha)*step(x3,xI,3)/(6*E*Izz) - eta*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x3,xI,1)/(G*J), step(x3,0,1),1,0,0,-eta] #d(x3)
 
 
-#Bc= [[-A_SC_int(La) - P*eta/(G*J)*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)],  #T(la) #g
-#       [P*m.cos(alpha)*(La - xII)],                             #My(la) #g
-#       [A_SC_doubleint(La) + P*m.sin(alpha)*(La-xII)],          #Mz(la) #g
-#       [P*m.cos(alpha)],                                                #Sz(la) #g
-#       [P*m.sin(alpha) +A_int(La) ],                                    #Sy(la) #g
-#       [d1*m.sin(alpha) ],                                               #w(x1)
-#       [0],                                                             #w(x2)
-#       [d3*m.sin(alpha) -P*m.cos(alpha)*(x3-xII)**3/(6*E*Iyy)],   #w(x3)
-#       [0-A_quadint(xI)*m.sin(alpha)/(6*E*Izz) + eta*A_SC_doubleint(xI)*m.sin(alpha)/(G*J) ],   #w'(xI)
-#       [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - (eta*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
-#       [-A_quadint(x2)/(6*E*Izz) - eta*A_SC_doubleint(x2)/(G*J)],
-#       [d3*m.cos(alpha) - (A_quadint(x3)/(6*E*Izz)) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*(x3 - xII)**3/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*(x3-xII)*eta/(G*J)]]
-#
+Bc1= [[-A_SC_int(La) - P*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)],  #T(la) #g
+       [P*m.cos(alpha)*(La - xII)],                             #My(la) #g
+       [A_doubleint(La) + P*m.sin(alpha)*(La-xII)],          #Mz(la) #g
+        [P*m.sin(alpha) +A_int(La) ],           #g                         #Sy(la) 
+       [P*m.cos(alpha)],                                                #Sz(la) #g
+       [d1*m.sin(alpha) ],                                               #w(x1)
+       [0],                                                             #w(x2)
+       [d3*m.sin(alpha) -P*m.cos(alpha)*(x3-xII)**3/(6*E*Iyy)],   #w(x3)
+       [0-A_quadint(xI)*m.sin(alpha)/(E*Izz) + eta*A_SC_doubleint(xI)*m.sin(alpha)/(G*J) ],   #w'(xI)
+       [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - (eta*A_SC_doubleint(x1)/(G*J))], #vertical deflection at x1
+       [-A_quadint(x2)/(E*Izz) - eta*A_SC_doubleint(x2)/(G*J)],
+       [d3*m.cos(alpha) - (A_quadint(x3)/(6*E*Izz)) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*(x3 - xII)**3/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*(x3-xII)*eta/(G*J)]]
+
 
 Bc= np.zeros(12)
 
-Bc[[-A_SC_int(La) - P*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(La, xII, 0)], #T(la)=0
+Bc=[[-A_SC_int(La) - P*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(La, xII, 0)], #T(la)=0
     [P*m.cos(alpha)*step(La, xII, 1)], #My(la)=0
     [A_doubleint(La) +P*m.sin(alpha)*step(La, xII, 1)], #Mz(la)
     [A_int(La) + P*m.sin(alpha)*step(La, xII, 0)], #Sy(la)=0
     [ P*m.cos(alpha)*step(La, xII, 0) ], #Sz(la)
-    [-d1*m.sin(alpha) -P*m.cos(alpha)*step(x1, xII, 3) ],
-    [0-P*m.cos(alpha)*step(x2, xII, 3)],
-    [-d3*m.sin(alpha)-P*m.cos(alpha)*step(x3, xII, 3) ],
-    [0-A_quadint(xI)/(E*Izz)*m.sin(alpha) + m.sin(alpha)*eta*A_SC_doubleint(xI)/(G*J)],
-    [d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - eta*A_SC_doubleint(x1)/(G*J) - P*m.sin(alpha)*step(x1,xI,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x1,xII,1)*eta/(G*J)],
-    [0 - (A_quadint(x2)/(6*E*Izz)) - eta*A_SC_doubleint(x2)/(G*J) - P*m.sin(alpha)*step(x2,xI,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x2,xII,1)*eta/(G*J)],
-    [d3*m.cos(alpha) - A_quadint(x3)/(6*E*Izz) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*step(x3,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x3,xII,1)*eta/(G*J)]]
+    [-d1*m.sin(alpha) -P*m.cos(alpha)*step(x1, xII, 3) ], #w(x1)
+    [0-P*m.cos(alpha)*step(x2, xII, 3)], #w(x2)
+    [-d3*m.sin(alpha)-P*m.cos(alpha)*step(x3, xII, 3)/(6*E*Iyy) ],  #w(x3))
+    [0+A_quadint(xI)/(E*Izz)*m.sin(alpha) - m.sin(alpha)*eta*A_SC_doubleint(xI)/(G*J)],
+    [-d1*m.cos(alpha) - (A_quadint(x1)/(6*E*Izz)) - eta*A_SC_doubleint(x1)/(G*J) - P*m.sin(alpha)*step(x1,xI,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x1,xII,1)*eta/(G*J)],
+    [0 - (A_quadint(x2)/(E*Izz)) - eta*A_SC_doubleint(x2)/(G*J) - P*m.sin(alpha)*step(x2,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x2,xII,1)*eta/(G*J)],
+    [-d3*m.cos(alpha) - A_quadint(x3)/(6*E*Izz) - eta*A_SC_doubleint(x3)/(G*J) - P*m.sin(alpha)*step(x3,xII,3)/(6*E*Izz) - P*(m.sin(alpha)*(eta+h*0.5)+m.cos(alpha)*h*0.5)*step(x3,xII,1)*eta/(G*J)]]
 
 
 F= np.linalg.solve(Rxn, Bc)
@@ -226,7 +226,7 @@ C4=F[10]
 C5=F[11]
 
  #Torque X-axis
-def Tx(x): return A_SC_int(x) - R1y*eta*step(x,x1,0) + RI*(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xI, 0) - R2y*eta*step(x, x2, 0) + P(m.sin(alpha)*(eta+0.5*h)+m.cos(alpha)*0.5*h)*step(x, xII, 0) -R3y*eta*step(x, x3, 0)
+def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xI,0) - eta*R2y*step(xx,x2,0) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xII,0) -eta*R3y*step(xx,x3,0)
 
  #Moment in y-axis
 def My(x): return R1z*step(x, x1, 1) - RI*m.cos(alpha)*(step(x, xI, 1)) + R2z*step(x, x2, 1) - P*m.cos(alpha)*step(x, xII, 1) + R3z*step(x,x3, 1)
