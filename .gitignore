@@ -1,2 +1,7 @@
 
 *.pyc
+__pycache__/interp.cpython-37.pyc
+*.pyc
+__pycache__/tools.cpython-37.pyc
+__pycache__/sectionproperties.cpython-37.pyc
+__pycache__/interp.cpython-37.pyc
