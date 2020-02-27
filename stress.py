@@ -8,13 +8,15 @@ Created on Mon Feb 17 15:06:53 2020
 # imports
 import math as m
 import matplotlib.pyplot as plt
-from sectionproperties import z, y, Nst, h, Lssk, angle_Lssk, Ca, La, SCz, eta, Izz, Iyy, Tsk, Tsp, Ast, A1, A2, G, d
+from sectionproperties import Cz, z, y, Nst, h, Lssk, angle_Lssk, Ca, La, eta, Izz, Iyy, Tsk, Tsp, Ast, A1, A2, G, d
 import numpy as np
 from tools import integral, integral2
 #---
 
 #############################################
-def shearflows(Vy,Vz,T) :
+# Function to find shear flow, shear and bending stress distributions
+#==========================================
+def stress_dist(Vz,Vy,Mz,My,T) :
     #FUNCTIONS
     #======================================
     # functions to relate theta or s to y and z coordinates
@@ -306,60 +308,137 @@ def shearflows(Vy,Vz,T) :
     qb23 = integral(d_qb23, 0, Lssk) + qB23(Lssk) + qb12       # [N/m]
     qb30 = integral(d_qb30, 0, m.pi/2) + qB30(m.pi/2) + qb23   # [N/m]
     qb34 = integral(d_qb34, 0, h/2) + qb23                     # [N/m]
-    
-    # redundant shear flows (defined clockwise positive like the base flows)
-    X = np.zeros((3,3))
-    x1, x2, x3 = 2*A1, 2*A2, 0
-    x4, x5, x6 = (1/(2*A1))*((h*m.pi)/(2*Tsk) + h/Tsp), -(1/(2*A1))*h/Tsp, -G
-    x7, x8, x9 = -(1/(2*A2))*h/Tsp, (1/(2*A2))*((2*Lssk)/Tsk + h/Tsp), -G
-    
-    X[0,:] = x1, x2, x3
-    X[1,:] = x4, x5, x6
-    X[2,:] = x7, x8, x9
-    
-    Y = np.zeros((3,1))
-    
-    int_r1 = -(h/2)*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
-    int_r1 -= d*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23()+ qb12*Lssk)
-    y1 = -Vy*eta - T + int_r1 
-    
-    int_r2 =  -(1/(2*Tsk*A1))*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
-    int_r2 += (1/(2*Tsp*A1))*(integral2(d_qb34, 0, h/2) + qb23*h/2 + integral2(d_qb41, 0, h/2))
-    y2 = int_r2
-     
-    int_r3 = -(1/(2*Tsk*A2))*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23() + qb12*Lssk)
-    int_r3 -= (1/(2*Tsp*A2))*(integral2(d_qb34, 0, h/2) + qb23*h*m.pi/4 + integral2(d_qb41, 0, h/2))
-    y3 = int_r3
-    
-    Y[:,0] = y1, y2, y3
-    
-    Q = np.linalg.solve(X,Y)
-    
-    q0I, q0II, dtheta_dx = Q[:,0]
+
+# Apparently the redundant shear flow is zero so I commented this out
+#    # redundant shear flows (defined clockwise positive like the base flows)
+#    X = np.zeros((3,3))
+#    x1, x2, x3 = 2*A1, 2*A2, 0
+#    x4, x5, x6 = (1/(2*A1))*((h*m.pi)/(2*Tsk) + h/Tsp), -(1/(2*A1))*h/Tsp, -G
+#    x7, x8, x9 = -(1/(2*A2))*h/Tsp, (1/(2*A2))*((2*Lssk)/Tsk + h/Tsp), -G
+#    
+#    X[0,:] = x1, x2, x3
+#    X[1,:] = x4, x5, x6
+#    X[2,:] = x7, x8, x9
+#    
+#    Y = np.zeros((3,1))
+#    
+#    int_r1 = -(h/2)*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
+#    int_r1 -= d*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23()+ qb12*Lssk)
+#    y1 = -Vy*eta - T + int_r1 
+#    
+#    int_r2 =  -(1/(2*Tsk*A1))*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
+#    int_r2 += (1/(2*Tsp*A1))*(integral2(d_qb34, 0, h/2) + qb23*h/2 + integral2(d_qb41, 0, h/2))
+#    y2 = int_r2
+#     
+#    int_r3 = -(1/(2*Tsk*A2))*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23() + qb12*Lssk)
+#    int_r3 -= (1/(2*Tsp*A2))*(integral2(d_qb34, 0, h/2) + qb23*h*m.pi/4 + integral2(d_qb41, 0, h/2))
+#    y3 = int_r3
+#    
+#    Y[:,0] = y1, y2, y3
+#    
+#    Q = np.linalg.solve(X,Y)
+#    
+#    q0I, q0II, dtheta_dx = Q[:,0]
     
     # shear flow distribution functions
     def get_q01(theta) :
-        q01 = integral(d_qb01, 0, theta) + qB01(theta) + q0I
+        q01 = integral(d_qb01, 0, theta) + qB01(theta) 
         return q01
     
     def get_q12(s) :
-        q12 = integral(d_qb12, 0, s) + qB12(s) + qb01 +qb41 + q0II
+        q12 = integral(d_qb12, 0, s) + qB12(s) + qb01 +qb41 
         return q12
     
     def get_q23(s) :
-        q23 = integral(d_qb23, 0, s) + qB23(s) + qb12 + q0II
+        q23 = integral(d_qb23, 0, s) + qB23(s) + qb12 
         return q23
     
     def get_q30(theta) :
-        q30 = integral(d_qb30, 0, theta) + qB30(theta) + qb23 + q0I
+        q30 = integral(d_qb30, 0, theta) + qB30(theta) + qb23
         return q30
     
     def get_q34(s) :
-        q34 = integral(d_qb34, 0, h/2) + qb23 - q0I + q0II
+        q34 = integral(d_qb34, 0, h/2) + qb23
         return q34
     
     def get_q41(s) :
-        q41 = integral(d_qb41, 0, h/2) - q0I + q0II
+        q41 = integral(d_qb41, 0, h/2)
         return q41
     
-    # now write what you want with these shear flow functions
+    # shear stress distribution functions
+    def get_tau01(theta) :
+        tau01 = get_q01(theta)/Tsk
+        return tau01
+    
+    def get_tau12(s) :
+        tau12 = get_q12(s)/Tsk
+        return tau12
+    
+    def get_tau23(s) :
+        tau23 = get_q23(s)/Tsk
+        return tau23
+    
+    def get_tau30(theta) :
+        tau30 = get_q30(theta)/Tsk
+        return tau30
+    
+    def get_tau34(s) :
+        tau34 = get_q34(s)/Tsp
+        return tau34
+    
+    def get_tau41(s) :
+        tau41 = get_q41(s)/Tsp
+        return tau41
+    
+    # functions for the bending stresses
+    def sigx01(theta) :
+        sigx = -(1/Izz)*Mz*fy01(theta) + (1/Iyy)*My*(fz01(theta) - (Cz + h/2))
+        return sigx
+    
+    def sigx12(s) :
+        sigx = -(1/Izz)*Mz*fy12(s) + (1/Iyy)*My*(fz12(s) - (Cz + h/2))
+        return sigx
+    
+    def sigx23(s) :
+        sigx = -(1/Izz)*Mz*fy23(s) + (1/Iyy)*My*(fz23(s) - (Cz + h/2))
+        return sigx
+    
+    def sigx30(theta) :
+        sigx = -(1/Izz)*Mz*fy30(theta) + (1/Iyy)*My*(fz30(theta) - (Cz + h/2))
+        return sigx
+    
+    def sigx34(s) :
+        sigx = -(1/Izz)*Mz*fy34(s) + (1/Iyy)*My*(fz34(s) - (Cz + h/2))
+        return sigx
+    
+    def sigx41(s) :
+        sigx = -(1/Izz)*Mz*fy41(s) + (1/Iyy)*My*(fz41(s) - (Cz + h/2))
+        return sigx
+    
+    # function for the Von Mises stresses
+    def vm01(theta) :
+        vm = m.sqrt((sigx01(theta))**2 + 3*(get_tau01(theta))**2)
+        return vm
+    
+    def vm12(s) :
+        vm = m.sqrt((sigx12(s))**2 + 3*(get_tau12(s))**2)
+        return vm
+    
+    def vm23(s) :
+        vm = m.sqrt((sigx23(s))**2 + 3*(get_tau23(s))**2)
+        return vm
+    
+    def vm30(theta) :
+        vm = m.sqrt((sigx30(theta))**2 + 3*(get_tau30(theta))**2)
+        return vm
+    
+    def vm34(s) :
+        vm = m.sqrt((sigx34(s))**2 + 3*(get_tau34(s))**2)
+        return vm
+    
+    def vm41(s) :
+        vm = m.sqrt((sigx41(s))**2 + 3*(get_tau41(s))**2)
+        return vm
+    
+    
+    

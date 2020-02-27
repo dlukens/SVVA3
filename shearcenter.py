@@ -7,7 +7,7 @@ Created on Wed Feb 26 17:31:59 2020
 
 # imports
 import math as m
-from sectionproperties import z, y, Nst, h, Lssk, angle_Lssk, Ca, Izz, Iyy, Tsk, Tsp, Ast, A1, A2, delta_str
+from sectionproperties import z, y, Nst, h, Lssk, angle_Lssk, Ca, Izz, Iyy, Tsk, Tsp, Ast, delta_str
 import numpy as np
 from tools import integral, integral2
 #---
@@ -142,6 +142,8 @@ def stepy30(theta,ystri,oint) :
 Vy, Vz = 1, 0               # [N]
 d = 0.5*h*m.cos(angle_Lssk) # [m]
 Delta = delta_str
+A1 = 0.5*m.pi*(h/2)**2      # area of cell 1
+A2 = (Ca - h/2)*h/2         # area of cell 2
 
 # base shear flow gradients without booms
 def d_qb01(theta,Vy=Vy,Vz=Vz) :
