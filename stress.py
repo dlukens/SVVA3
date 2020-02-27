@@ -279,13 +279,6 @@ def stress_dist(Vz,Vy,Mz,My,T) :
     for i in range(stiffpoints) :
         z41[i] = fz41(lstiff[i])
         y41[i] = fy41(lstiff[i])
-        
-    ##################################################################    
-    # Discretise the span of the aileron
-    beginnode = 0.001
-    endnode = La - 0.002
-    nodesnumber = 100
-    deltax = (endnode - beginnode)/(nodesnumber)
     
     ##################################################################
     #Plot the aileron
@@ -306,63 +299,62 @@ def stress_dist(Vz,Vy,Mz,My,T) :
     qb41 = integral(d_qb41, 0, h/2)                            # [N/m]
     qb12 = integral(d_qb12, 0, Lssk) + qB12(Lssk) + qb01 +qb41 # [N/m]
     qb23 = integral(d_qb23, 0, Lssk) + qB23(Lssk) + qb12       # [N/m]
-    qb30 = integral(d_qb30, 0, m.pi/2) + qB30(m.pi/2) + qb23   # [N/m]
-    qb34 = integral(d_qb34, 0, h/2) + qb23                     # [N/m]
+    #qb30 = integral(d_qb30, 0, m.pi/2) + qB30(m.pi/2) + qb23   # [N/m]
+    #qb34 = integral(d_qb34, 0, h/2) + qb23                     # [N/m]
 
-# Apparently the redundant shear flow is zero so I commented this out
-#    # redundant shear flows (defined clockwise positive like the base flows)
-#    X = np.zeros((3,3))
-#    x1, x2, x3 = 2*A1, 2*A2, 0
-#    x4, x5, x6 = (1/(2*A1))*((h*m.pi)/(2*Tsk) + h/Tsp), -(1/(2*A1))*h/Tsp, -G
-#    x7, x8, x9 = -(1/(2*A2))*h/Tsp, (1/(2*A2))*((2*Lssk)/Tsk + h/Tsp), -G
-#    
-#    X[0,:] = x1, x2, x3
-#    X[1,:] = x4, x5, x6
-#    X[2,:] = x7, x8, x9
-#    
-#    Y = np.zeros((3,1))
-#    
-#    int_r1 = -(h/2)*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
-#    int_r1 -= d*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23()+ qb12*Lssk)
-#    y1 = -Vy*eta - T + int_r1 
-#    
-#    int_r2 =  -(1/(2*Tsk*A1))*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
-#    int_r2 += (1/(2*Tsp*A1))*(integral2(d_qb34, 0, h/2) + qb23*h/2 + integral2(d_qb41, 0, h/2))
-#    y2 = int_r2
-#     
-#    int_r3 = -(1/(2*Tsk*A2))*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23() + qb12*Lssk)
-#    int_r3 -= (1/(2*Tsp*A2))*(integral2(d_qb34, 0, h/2) + qb23*h*m.pi/4 + integral2(d_qb41, 0, h/2))
-#    y3 = int_r3
-#    
-#    Y[:,0] = y1, y2, y3
-#    
-#    Q = np.linalg.solve(X,Y)
-#    
-#    q0I, q0II, dtheta_dx = Q[:,0]
+    # redundant shear flows (defined clockwise positive like the base flows)
+    X = np.zeros((3,3))
+    x1, x2, x3 = 2*A1, 2*A2, 0
+    x4, x5, x6 = (1/(2*A1))*((h*m.pi)/(2*Tsk) + h/Tsp), -(1/(2*A1))*h/Tsp, -G
+    x7, x8, x9 = -(1/(2*A2))*h/Tsp, (1/(2*A2))*((2*Lssk)/Tsk + h/Tsp), -G
+    
+    X[0,:] = x1, x2, x3
+    X[1,:] = x4, x5, x6
+    X[2,:] = x7, x8, x9
+    
+    Y = np.zeros((3,1))
+    
+    int_r1 = -(h/2)*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
+    int_r1 -= d*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23()+ qb12*Lssk)
+    y1 = -Vy*eta - T + int_r1 
+    
+    int_r2 =  -(1/(2*Tsk*A1))*((h/2)*integral2(d_qb01, 0, m.pi/2) + SB01() + (h/2)*integral2(d_qb30, 0, m.pi/2) + SB30() + qb23*h*m.pi/4)
+    int_r2 += (1/(2*Tsp*A1))*(integral2(d_qb34, 0, h/2) + qb23*h/2 + integral2(d_qb41, 0, h/2))
+    y2 = int_r2
+     
+    int_r3 = -(1/(2*Tsk*A2))*(integral2(d_qb12, 0, Lssk) + SB12() + (qb01 + qb41)*Lssk + integral2(d_qb23, 0, Lssk) + SB23() + qb12*Lssk)
+    int_r3 -= (1/(2*Tsp*A2))*(integral2(d_qb34, 0, h/2) + qb23*h*m.pi/4 + integral2(d_qb41, 0, h/2))
+    y3 = int_r3
+    
+    Y[:,0] = y1, y2, y3
+    
+    Q = np.linalg.solve(X,Y)
+    
+    q0I, q0II, dtheta_dx = Q[:,0]
     
     # shear flow distribution functions
     def get_q01(theta) :
-        q01 = integral(d_qb01, 0, theta) + qB01(theta) 
+        q01 = integral(d_qb01, 0, theta) + qB01(theta) + q0I
         return q01
     
     def get_q12(s) :
-        q12 = integral(d_qb12, 0, s) + qB12(s) + qb01 +qb41 
+        q12 = integral(d_qb12, 0, s) + qB12(s) + qb01 +qb41 + q0II
         return q12
     
     def get_q23(s) :
-        q23 = integral(d_qb23, 0, s) + qB23(s) + qb12 
+        q23 = integral(d_qb23, 0, s) + qB23(s) + qb12 + q0II
         return q23
     
     def get_q30(theta) :
-        q30 = integral(d_qb30, 0, theta) + qB30(theta) + qb23
+        q30 = integral(d_qb30, 0, theta) + qB30(theta) + qb23 + q0I
         return q30
     
     def get_q34(s) :
-        q34 = integral(d_qb34, 0, h/2) + qb23
+        q34 = integral(d_qb34, 0, h/2) + qb23 - q0I + q0II
         return q34
     
     def get_q41(s) :
-        q41 = integral(d_qb41, 0, h/2)
+        q41 = integral(d_qb41, 0, h/2) - q0I + q0II
         return q41
     
     # shear stress distribution functions
@@ -439,6 +431,7 @@ def stress_dist(Vz,Vy,Mz,My,T) :
     def vm41(s) :
         vm = m.sqrt((sigx41(s))**2 + 3*(get_tau41(s))**2)
         return vm
+
     
     
     
