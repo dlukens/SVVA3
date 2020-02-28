@@ -270,7 +270,7 @@ Szlist = np.zeros(len(lst))
 
 for i in range(len(lst)):
     thetalist[i]=theta(lst[i])
-    vdeflectionlist[i]=v(lst[i]) + eta*theta(lst[i])
+    vdeflectionlist[i]=v(lst[i]) - eta*theta(lst[i])
     wdeflectionlist[i]=w(lst[i])
     Torquelist[i]=T(lst[i])
     Mylist[i] = My(lst[i])
