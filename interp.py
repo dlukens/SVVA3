@@ -3,7 +3,7 @@ import math
 import matplotlib.pyplot as plt
 
 #import data set
-data = np.loadtxt('aeroload.dat',dtype='float', delimiter=',')
+data = 1000*np.loadtxt('aeroload.dat',dtype='float', delimiter=',')
 
 #### Cordinates of aero force ####
 

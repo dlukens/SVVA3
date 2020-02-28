@@ -384,27 +384,27 @@ def stress_dist(Vz,Vy,Mz,My,T) :
     
     # functions for the bending stresses
     def sigx01(theta) :
-        sigx = -(1/Izz)*Mz*fy01(theta) + (1/Iyy)*My*(fz01(theta) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy01(theta) + (1/Iyy)*My*(fz01(theta) - (Cz + h/2))
         return sigx
     
     def sigx12(s) :
-        sigx = -(1/Izz)*Mz*fy12(s) + (1/Iyy)*My*(fz12(s) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy12(s) + (1/Iyy)*My*(fz12(s) - (Cz + h/2))
         return sigx
     
     def sigx23(s) :
-        sigx = -(1/Izz)*Mz*fy23(s) + (1/Iyy)*My*(fz23(s) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy23(s) + (1/Iyy)*My*(fz23(s) - (Cz + h/2))
         return sigx
     
     def sigx30(theta) :
-        sigx = -(1/Izz)*Mz*fy30(theta) + (1/Iyy)*My*(fz30(theta) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy30(theta) + (1/Iyy)*My*(fz30(theta) - (Cz + h/2))
         return sigx
     
     def sigx34(s) :
-        sigx = -(1/Izz)*Mz*fy34(s) + (1/Iyy)*My*(fz34(s) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy34(s) + (1/Iyy)*My*(fz34(s) - (Cz + h/2))
         return sigx
     
     def sigx41(s) :
-        sigx = -(1/Izz)*Mz*fy41(s) + (1/Iyy)*My*(fz41(s) - (Cz + h/2))
+        sigx = (1/Izz)*Mz*fy41(s) + (1/Iyy)*My*(fz41(s) - (Cz + h/2))
         return sigx
     
     # function for the Von Mises stresses
@@ -432,6 +432,7 @@ def stress_dist(Vz,Vy,Mz,My,T) :
         vm = m.sqrt((sigx41(s))**2 + 3*(get_tau41(s))**2)
         return vm
 
+    print(sigx12(Lssk/2))
     
     
     
