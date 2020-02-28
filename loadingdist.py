@@ -235,7 +235,7 @@ def My(x): return R1z*step(x, x1, 1) - RI*m.cos(alpha)*(step(x, xI, 1)) + R2z*st
 def Mz(x): return -A_doubleint(x) + R1y*step(x, x1, 1) - RI*m.sin(alpha)*step(x, xI, 1) + R2y*step(x, x2, 1) - P*m.sin(alpha)*step(x, xII, 1) + R3y*step(x, x3, 1)
 
  #Shear y-axis
-def Sy(x): return -A_int(x) + R1y*step(x, x1, 0) - RI*m.sin(alpha)*step(x, xI, 0) + R2y*step(x, x2, 0) - P*m.sin(alpha)*step(x, xII, 0) + R3y*step(x, x3, 0)
+def Sy(x): return A_int(x) - R1y*step(x, x1, 0) + RI*m.sin(alpha)*step(x, xI, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, xII, 0) - R3y*step(x, x3, 0)
 
  #Shear Z-Axis
 def Sz(x): return R1z*step(x, x1, 0) - RI*m.cos(alpha)*(step(x, xI, 0)) + R2z*step(x, x2, 0) - P*m.cos(alpha)*step(x, xII, 0) + R3z*step(x,x3, 0)
@@ -315,11 +315,11 @@ plt.title('Torque')
 #plt.title('Bending Moment-Z')
 #plt.show()
 
-#plt.subplot(337)
-#plt.plot(lst,Sylist, color='red')
-#plt.xlabel('x[m]')
-#plt.ylabel('Sy[N]')
-#plt.title('Shear Y')
+plt.subplot(337)
+plt.plot(lst,Sylist, color='red')
+plt.xlabel('x[m]')
+plt.ylabel('Sy[N]')
+plt.title('Shear Y')
 #
 #plt.subplot(338)
 #plt.plot(lst,Szlist, color='blue')
