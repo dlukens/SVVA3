@@ -232,7 +232,7 @@ def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+0.
 def My(x): return R1z*step(x, x1, 1) - RI*m.cos(alpha)*(step(x, xI, 1)) + R2z*step(x, x2, 1) - P*m.cos(alpha)*step(x, xII, 1) + R3z*step(x,x3, 1)
 
  #Moment in X-axis                                  
-def Mz(x): return -A_doubleint(x) + R1y*step(x, x1, 1) - RI*m.sin(alpha)*step(x, xI, 1) + R2y*step(x, x2, 1) - P*m.sin(alpha)*step(x, xII, 1) + R3y*step(x, x3, 1)
+def Mz(x): return A_doubleint(x) - R1y*step(x, x1, 1) + RI*m.sin(alpha)*step(x, xI, 1) - R2y*step(x, x2, 1) + P*m.sin(alpha)*step(x, xII, 1) - R3y*step(x, x3, 1)
 
  #Shear y-axis
 def Sy(x): return A_int(x) - R1y*step(x, x1, 0) + RI*m.sin(alpha)*step(x, xI, 0) - R2y*step(x, x2, 0) + P*m.sin(alpha)*step(x, xII, 0) - R3y*step(x, x3, 0)
