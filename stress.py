@@ -8,6 +8,7 @@ Created on Mon Feb 17 15:06:53 2020
 # imports
 import math as m
 import matplotlib.pyplot as plt
+from loadingdist import Sz, Sy, T, Mz, My
 from sectionproperties import Cz, z, y, Nst, h, Lssk, angle_Lssk, Ca, La, eta, Izz, Iyy, Tsk, Tsp, Ast, A1, A2, G, d
 import numpy as np
 from tools import integral, integral2
@@ -16,7 +17,7 @@ from tools import integral, integral2
 #############################################
 # Function to find shear flow, shear and bending stress distributions
 #==========================================
-def stress_dist(Vz,Vy,Mz,My,T) :
+def stress_dist(Vz,Vy,Mz,My,T,x) :
     #FUNCTIONS
     #======================================
     # functions to relate theta or s to y and z coordinates
@@ -432,7 +433,32 @@ def stress_dist(Vz,Vy,Mz,My,T) :
         vm = m.sqrt((sigx41(s))**2 + 3*(get_tau41(s))**2)
         return vm
 
-    print(sigx12(Lssk/2))
+    # max von mises stress in a cross-section
+    def maxvm(x) :
+        vmlst = []
+        for th in np.arange(0,m.pi/2 + 0.01,0.01) :
+            vmlst.append(vm01(th))
+            vmlst.append(vm30(th))
+        vmlst = [max(vmlst)]
+        for s in np.arange(0,Lssk + 0.01,0.01) :
+            vmlst.append(vm12(s))
+            vmlst.append(vm23(s))
+        vmlst = [max(vmlst)]
+        for s in np.arange(0,h/2 + 0.01,0.01) :
+            vmlst.append(vm34(s))
+            vmlst.append(vm41(s))
+        return max(vmlst)
     
+    return maxvm(x)
+        
+X = np.arange(0.01,La - 0.01, 0.01) 
+vmlst = []
+
+for x in X :
+    Vz, Vy, M_z, M_y, Tor = Sz(x), Sy(x), Mz(x), My(x), T(x)
+    vmlst.append(stress_dist(Vz,Vy,M_z,M_y,Tor,x))
     
+VMmax = max(vmlst)
+print(VMmax)
+        
     
