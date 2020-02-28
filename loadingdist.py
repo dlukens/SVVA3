@@ -9,7 +9,6 @@ import tools as t
 import matplotlib.pyplot as plt
 
 ###variables
-#SCz=-0.132297
 alpha = m.radians(25) # angle of attack
 eta = np.abs (SCz + h/2)       # distance midpoint spar - shear center
 xI=x2-0.5*xa
