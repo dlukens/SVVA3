@@ -227,7 +227,7 @@ C4=float(F[10])
 C5=float(F[11])
 
  #Torque X-axis
-def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xI,0) - eta*R2y*step(xx,x2,0) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(xx,xII,0) -eta*R3y*step(xx,x3,0)
+def T(xx): return A_SC_int(xx) - eta*R1y*step(xx,x1,0) +RI*(m.sin(alpha)*(eta+0.5*h)-m.cos(alpha)*0.5*h)*step(xx,xI,0) - eta*R2y*step(xx,x2,0) +P*(m.sin(alpha)*(eta+h/2)-m.cos(alpha)*h*0.5)*step(xx,xII,0) -eta*R3y*step(xx,x3,0)
 
  #Moment in y-axis
 def My(x): return R1z*step(x, x1, 1) - RI*m.cos(alpha)*(step(x, xI, 1)) + R2z*step(x, x2, 1) - P*m.cos(alpha)*step(x, xII, 1) + R3z*step(x,x3, 1)
@@ -242,14 +242,14 @@ def Sy(x): return -A_int(x) + R1y*step(x, x1, 0) - RI*m.sin(alpha)*step(x, xI, 0
 def Sz(x): return R1z*step(x, x1, 0) - RI*m.cos(alpha)*(step(x, xI, 0)) + R2z*step(x, x2, 0) - P*m.cos(alpha)*step(x, xII, 0) + R3z*step(x,x3, 0)
 
  #Deflection in Y-axis
-def v(x): return (1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*step(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) +C1*step(x,0,1) #+ C2
+def v(x): return (1/(6*E*Izz))*(6*A_quadint(x) - R1y*step(x, x1, 3) + RI*m.sin(alpha)*step(x, xI, 3) - R2y*step(x, x2, 3) + P*m.sin(alpha)*step(x, xII, 3) - R3y*step(x, x3, 3)) +C1*step(x,0,1) + C2
 
 
  #Deflection in Z-axis
 def w(x): return (1/(6*E*Iyy))*(-R1z*step(x, x1, 3) + RI*m.cos(alpha)*step(x, xI, 3) - R2z*step(x, x2, 3) + P*m.cos(alpha)*step(x, xII, 3) - R3z*step(x,x3, 3)) + C3*step(x,0,1) + C4
 
  #Twist around X-axis
-def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) +RI*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xI,1) - eta*R2y*step(x,x2,1) +P*(m.sin(alpha)*(eta+h/2)+m.cos(alpha)*h*0.5)*step(x,xII,1) -eta*R3y*step(x,x3,1)) #+ C5              
+def theta(x): return (1/(G*J))*(A_SC_doubleint(x) - eta*R1y*step(x,x1,1) +RI*(m.sin(alpha)*(eta+0.5*h)-m.cos(alpha)*0.5*h)*step(x,xI,1) - eta*R2y*step(x,x2,1) +P*(m.sin(alpha)*(eta+0.5*h)-m.cos(alpha)*0.5*h)*step(x,xII,1) -eta*R3y*step(x,x3,1)) + C5              
 
 
 beginnode = 0.01
@@ -271,7 +271,7 @@ Szlist = np.zeros(len(lst))
 
 for i in range(len(lst)):
     thetalist[i]=theta(lst[i])
-    vdeflectionlist[i]=v(lst[i]) - eta*theta(lst[i])
+    vdeflectionlist[i]=v(lst[i]) + eta*theta(lst[i])
     wdeflectionlist[i]=w(lst[i])
     Torquelist[i]=T(lst[i])
     Mylist[i] = My(lst[i])
